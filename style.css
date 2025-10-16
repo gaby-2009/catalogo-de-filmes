@@ -258,3 +258,39 @@ textarea {
         max-width: 80%;
     }
 }
+
+/* -------------------------------------- */
+/* ESTILOS DAS ESTRELAS DE PONTUAÇÃO */
+/* -------------------------------------- */
+
+.nota {
+    /* Define o contêiner das estrelas como flex para mantê-las na mesma linha */
+    display: flex;
+    align-items: center;
+}
+
+.estrela {
+    /* Fonte maior para as estrelas */
+    font-size: 1.5em; 
+    color: gold; /* Cor padrão para a estrela cheia */
+    margin-right: 2px;
+    display: inline-block;
+}
+
+.estrela.vazia {
+    /* Estrela não preenchida (cor da borda) */
+    color: #ccc; 
+    opacity: 0.5;
+}
+
+.estrela.metade {
+    /* Simulação de meia estrela usando máscara de cor */
+    position: relative;
+    /* Isso garante que a estrela esteja na mesma linha */
+    line-height: 1; 
+}
+
+/* Opcional: Se quiser uma representação visual mais precisa de meia estrela,
+   seria necessário usar uma imagem/SVG, ou um truque mais avançado de CSS.
+   A implementação atual usa 5 estrelas baseadas no 0.5 mais próximo.
+   Para simplificar, usaremos o CSS para controlar a cor e opacidade das estrelas. */

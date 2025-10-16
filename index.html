@@ -86,7 +86,7 @@
         <p id="mensagem-vazia">Nenhum filme cadastrado ainda.</p>
     </div>
 
-    <script>
+   <script>
         // 1. ARMAZENAMENTO DE DADOS
         const catalogo = [];
 
@@ -108,6 +108,40 @@
 
 
         // ------------------------------------
+        // FUNÇÃO AUXILIAR: GERAR ESTRELAS
+        // ------------------------------------
+        /**
+         * Gera a string HTML de estrelas com base na nota (0 a 10).
+         * @param {number} nota - A nota do filme.
+         * @returns {string} HTML com ícones de estrelas.
+         */
+        function gerarEstrelas(nota) {
+            // Arredonda a nota para o 0.5 mais próximo
+            const notaArredondada = Math.round(nota * 2) / 2;
+            let estrelasHtml = '';
+            
+            // O catálogo de estrelas será baseado em 5 estrelas (cada estrela = 2 pontos)
+            for (let i = 1; i <= 5; i++) {
+                if (i <= notaArredondada) {
+                    // Estrela Cheia
+                    estrelasHtml += '<span class="estrela cheia">★</span>';
+                } else if (i - 0.5 === notaArredondada) {
+                    // Meia Estrela
+                    estrelasHtml += '<span class="estrela metade">★</span>';
+                } else {
+                    // Estrela Vazia (usando um ícone vazio ou cor mais clara no CSS)
+                    // Usaremos a estrela cheia, mas o CSS fará com que pareça vazia
+                    estrelasHtml += '<span class="estrela vazia">★</span>';
+                }
+            }
+            // Adiciona a nota numérica ao final, mantendo a precisão de 1 casa decimal
+            estrelasHtml += `<span class="nota-valor"> (${nota.toFixed(1)}/10)</span>`;
+
+            return estrelasHtml;
+        }
+
+
+        // ------------------------------------
         // FUNÇÃO DE REMOÇÃO (Otimizada)
         // ------------------------------------
         function removerFilme(indice) {
@@ -119,12 +153,11 @@
         function formatarDuracao(minutos) {
             const horas = Math.floor(minutos / 60);
             const mins = minutos % 60;
-            // Garante que "min" só aparece se for maior que 0
             return `${horas > 0 ? horas + 'h ' : ''}${mins > 0 ? mins + 'min' : (horas === 0 ? '0min' : '')}`.trim();
         }
 
         // ------------------------------------
-        // FUNÇÃO DE RENDERIZAÇÃO (Desenha o HTML com novos campos)
+        // FUNÇÃO DE RENDERIZAÇÃO (Desenha o HTML com estrelas)
         // ------------------------------------
         function renderizarCatalogo() {
             listaFilmesContainer.innerHTML = '';
@@ -142,6 +175,7 @@
                 filmeCard.classList.add('filme-card');
                 
                 const duracaoFormatada = formatarDuracao(filme.duracao);
+                const estrelasHtml = gerarEstrelas(filme.nota); // Chama a nova função
                 
                 filmeCard.innerHTML = `
                     <img src="${filme.imagemURL}" alt="Poster do filme ${filme.titulo}" class="filme-imagem">
@@ -150,7 +184,9 @@
                         <p><strong>Diretor:</strong> ${filme.diretor}</p>
                         <p><strong>Gênero:</strong> ${filme.genero} | <strong>Faixa Etária:</strong> ${filme.faixaEtaria}</p>
                         <p><strong>Duração:</strong> ${duracaoFormatada}</p>
-                        <p class="nota"><strong>Nota:</strong> <span class="nota-valor">${filme.nota.toFixed(1)}</span>/10</p>
+                        
+                        <p class="nota"><strong>Nota:</strong> ${estrelasHtml}</p>
+                        
                         <p><strong>Sinopse:</strong> ${filme.sinopse}</p>
                         <button class="btn-remover">Remover</button>
                     </div>
@@ -166,7 +202,7 @@
         }
 
         // ------------------------------------
-        // FUNÇÃO DE CADASTRO (Ao enviar o formulário, incluindo novos dados)
+        // FUNÇÃO DE CADASTRO (Ao enviar o formulário)
         // ------------------------------------
         form.addEventListener('submit', function(event) {
             event.preventDefault();
