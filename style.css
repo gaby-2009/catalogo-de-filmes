@@ -14,181 +14,112 @@
 :root {
     /* Paleta de Cores Roxo */
     --cor-primaria: #6a0dad; /* Roxo Escuro Principal */
-    --cor-secundaria: #8a2be2; /* Roxo Médio/Azul-violeta */
+    --cor-secundaria: #8a2be2; /* Roxo Médio/Azul-violeta (Usado como tom mais claro ou hover) */
     --cor-fundo: #f0e6ff; /* Roxo Muito Claro (Lavanda) para o fundo */
     --cor-fundo-card: #ffffff; /* Fundo Branco para cartões */
     --cor-texto: #333333; /* Texto Escuro */
     --cor-borda: #ccc;
-    --cor-sucesso: #4CAF50; /* Mantido como verde para consistência, se necessário */
-    --cor-erro: #dc3545;    /* Mantido como vermelho para a ação de 'remover' */
-    --cor-erro-hover: #c82333; 
+    
+    /* CORES DE ESTADO ALTERADAS PARA VARIAÇÕES ROXAS */
+    --cor-erro: var(--cor-secundaria);       /* Roxo claro para o botão de 'Remover' */
+    --cor-erro-hover: var(--cor-primaria);   /* Roxo escuro para o hover do 'Remover' */
 }
 
 body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
+    font-family: Arial, sans-serif;
+    margin: 20px;
     background-color: var(--cor-fundo);
     color: var(--cor-texto);
-    line-height: 1.6;
-    /* Linha adicionada para corrigir um estilo duplicado do bloco anterior */
-    padding: 20px; 
 }
 
 h1 {
-    text-align: center;
+    /* Cor alterada para roxo */
     color: var(--cor-primaria);
-    padding: 20px 0;
-    margin-bottom: 0;
-    background-color: var(--cor-fundo-card);
-    border-bottom: 3px solid var(--cor-secundaria);
+    border-bottom: 2px solid var(--cor-secundaria);
+    padding-bottom: 5px;
 }
 
 h2 {
     /* Cor alterada para roxo */
-    color: var(--cor-secundaria); 
-    border-bottom: 2px solid var(--cor-borda); 
+    color: var(--cor-secundaria);
+    border-bottom: 2px solid var(--cor-borda);
     padding-bottom: 5px;
-    margin-top: 30px;
 }
 
-hr {
-    border: 0;
-    height: 1px;
-    background-color: var(--cor-borda);
-    margin: 40px auto;
-    width: 90%;
-}
-
-/* -------------------------------------- */
-/* ESTILOS DO FORMULÁRIO (Layout CSS Grid) */
-/* -------------------------------------- */
-
+/* ------------------------------------
+ * Estilos do Formulário
+ * ------------------------------------
+ */
 #cadastro-filme {
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 30px;
-    background-color: var(--cor-fundo-card);
+    background: var(--cor-fundo-card);
+    padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-
-    /* Layout Grid */
-    display: grid;
-    grid-template-columns: 1fr 1fr; 
-    gap: 15px 20px; 
-}
-
-/* Título, Imagem URL, Sinopse e H2 do formulário ocupam 2 colunas */
-#cadastro-filme h2, /* Adicionado h2 para ocupar toda a largura */
-#cadastro-filme div:nth-child(1), /* Título */
-#cadastro-filme div:nth-child(2), /* Imagem URL */
-#cadastro-filme div:nth-child(3), /* Sinopse */
-#cadastro-filme button {
-    grid-column: 1 / 3; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
 }
 
 #cadastro-filme div {
-    margin-bottom: 0; /* Ajustado para o Grid */
-    display: block; 
+    margin-bottom: 15px;
+    /* Mantido o display column para o layout simples vertical */
+    display: flex;
+    flex-direction: column;
 }
 
-label {
-    display: block;
+#cadastro-filme label {
     margin-bottom: 5px;
     font-weight: bold;
-    color: var(--cor-texto);
 }
 
-input[type="text"],
-input[type="number"],
-input[type="url"],
-select,
-textarea { 
-    width: 100%; 
+#cadastro-filme input[type="text"],
+#cadastro-filme input[type="number"],
+#cadastro-filme input[type="url"],
+#cadastro-filme select,
+#cadastro-filme textarea {
     padding: 10px;
     border: 1px solid var(--cor-borda);
     border-radius: 4px;
     font-size: 16px;
-    box-sizing: border-box; 
-    transition: border-color 0.3s;
-}
-
-input[type="text"]:focus,
-input[type="number"]:focus,
-input[type="url"]:focus,
-select:focus,
-textarea:focus {
-    /* Cor de foco alterada para roxo */
-    border-color: var(--cor-primaria);
-    outline: none;
-}
-
-textarea {
-    resize: vertical;
-    min-height: 100px; 
-}
-
-
-/* ------------------------------------
- * Estilos do Botão de Envio
- * ------------------------------------
- */
-
-#cadastro-filme button[type="submit"] {
-    display: block;
     width: 100%;
-    padding: 12px;
+    box-sizing: border-box;
+}
+
+#cadastro-filme textarea {
+    resize: vertical;
+}
+
+#cadastro-filme button {
     /* Cor alterada para roxo primário */
     background-color: var(--cor-primaria);
     color: white;
+    padding: 10px 15px;
     border: none;
     border-radius: 4px;
-    font-size: 1em;
     cursor: pointer;
-    transition: background-color 0.3s, transform 0.1s;
-    margin-top: 10px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
 }
 
-#cadastro-filme button[type="submit"]:hover {
+#cadastro-filme button:hover {
     /* Cor alterada para roxo secundário */
     background-color: var(--cor-secundaria);
-}
-
-#cadastro-filme button[type="submit"]:active {
-    transform: scale(0.99);
 }
 
 /* -------------------------------------- */
 /* ESTILOS DA LISTA DE FILMES */
 /* -------------------------------------- */
 #lista-filmes {
-    max-width: 900px;
-    margin: 20px auto 50px auto;
-    padding: 0 20px;
-}
-
-/* Estilo para a mensagem "Nenhum filme cadastrado ainda." */
-#mensagem-vazia {
-    color: #666;
-    font-style: italic;
-    text-align: center;
-    padding: 20px;
-    border: 1px dashed var(--cor-borda);
-    border-radius: 5px;
-    background-color: var(--cor-fundo-card);
+    margin-top: 20px;
 }
 
 .filme-card {
-    background-color: var(--cor-fundo-card);
     border: 1px solid var(--cor-borda);
-    /* Detalhe lateral roxo */
-    border-left: 5px solid var(--cor-secundaria); 
-    border-radius: 6px;
     padding: 15px;
     margin-bottom: 15px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    background: var(--cor-fundo-card);
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     
-    /* Layout Flexbox */
+    /* Layout para alinhar a imagem e o texto */
     display: flex; 
     gap: 20px;
 }
@@ -207,20 +138,16 @@ textarea {
 
 .filme-card h3 {
     margin-top: 0;
-    /* Cor alterada para roxo primário */
+    /* Cor alterada para roxo */
     color: var(--cor-primaria);
-    font-size: 1.4em;
-    margin-bottom: 5px;
 }
 
 .filme-card p {
     margin: 5px 0;
-    color: var(--cor-texto);
 }
 
-/* Botão de Remover */
 .btn-remover {
-    /* Mantido como cor de erro (vermelho) */
+    /* Cor alterada para roxo secundário */
     background-color: var(--cor-erro);
     color: white;
     border: none;
@@ -232,22 +159,49 @@ textarea {
 }
 
 .btn-remover:hover {
-    /* Mantido como cor de erro mais escura */
+    /* Cor alterada para roxo primário no hover */
     background-color: var(--cor-erro-hover);
 }
 
+#mensagem-vazia {
+    color: #666;
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
+    border: 1px dashed var(--cor-borda);
+    border-radius: 5px;
+}
 
-/* Opcional: Layout responsivo para telas pequenas */
+/* -------------------------------------- */
+/* ESTILOS DAS ESTRELAS DE PONTUAÇÃO */
+/* -------------------------------------- */
+
+.nota {
+    display: flex;
+    align-items: center;
+}
+
+.estrela {
+    font-size: 1.5em; 
+    /* Cor alterada para o roxo primário (estrela cheia) */
+    color: var(--cor-primaria); 
+    margin-right: 2px;
+    display: inline-block;
+}
+
+.estrela.vazia {
+    /* Estrela não preenchida (cor mais clara) */
+    color: var(--cor-borda); 
+    opacity: 0.5;
+}
+
+.estrela.metade {
+    position: relative;
+    line-height: 1; 
+}
+
+/* Opcional: Layout responsivo para telas pequenas (mantido do bloco anterior) */
 @media (max-width: 600px) {
-    #cadastro-filme {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
-    /* Regra para garantir que todos os itens do formulário fiquem em 1 coluna */
-    #cadastro-filme div {
-        grid-column: auto !important; 
-    }
-    
     .filme-card {
         flex-direction: column; 
         align-items: center;
@@ -258,39 +212,3 @@ textarea {
         max-width: 80%;
     }
 }
-
-/* -------------------------------------- */
-/* ESTILOS DAS ESTRELAS DE PONTUAÇÃO */
-/* -------------------------------------- */
-
-.nota {
-    /* Define o contêiner das estrelas como flex para mantê-las na mesma linha */
-    display: flex;
-    align-items: center;
-}
-
-.estrela {
-    /* Fonte maior para as estrelas */
-    font-size: 1.5em; 
-    color: gold; /* Cor padrão para a estrela cheia */
-    margin-right: 2px;
-    display: inline-block;
-}
-
-.estrela.vazia {
-    /* Estrela não preenchida (cor da borda) */
-    color: #ccc; 
-    opacity: 0.5;
-}
-
-.estrela.metade {
-    /* Simulação de meia estrela usando máscara de cor */
-    position: relative;
-    /* Isso garante que a estrela esteja na mesma linha */
-    line-height: 1; 
-}
-
-/* Opcional: Se quiser uma representação visual mais precisa de meia estrela,
-   seria necessário usar uma imagem/SVG, ou um truque mais avançado de CSS.
-   A implementação atual usa 5 estrelas baseadas no 0.5 mais próximo.
-   Para simplificar, usaremos o CSS para controlar a cor e opacidade das estrelas. */
