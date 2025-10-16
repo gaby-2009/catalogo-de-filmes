@@ -19,8 +19,9 @@
     --cor-fundo-card: #ffffff; /* Fundo Branco para cartões */
     --cor-texto: #333333; /* Texto Escuro */
     --cor-borda: #ccc;
-    --cor-sucesso: #4CAF50;
-    --cor-erro: #dc3545;
+    --cor-sucesso: #4CAF50; /* Mantido como verde para consistência, se necessário */
+    --cor-erro: #dc3545;    /* Mantido como vermelho para a ação de 'remover' */
+    --cor-erro-hover: #c82333; 
 }
 
 body {
@@ -30,6 +31,8 @@ body {
     background-color: var(--cor-fundo);
     color: var(--cor-texto);
     line-height: 1.6;
+    /* Linha adicionada para corrigir um estilo duplicado do bloco anterior */
+    padding: 20px; 
 }
 
 h1 {
@@ -37,13 +40,13 @@ h1 {
     color: var(--cor-primaria);
     padding: 20px 0;
     margin-bottom: 0;
-    background-color: var(--cor-fundo-card); /* Usando variável para o fundo branco */
+    background-color: var(--cor-fundo-card);
     border-bottom: 3px solid var(--cor-secundaria);
 }
 
 h2 {
-    color: var(--cor-secundaria);
-    /* MELHORIA: Usar uma cor mais visível para o sublinhado do h2 */
+    /* Cor alterada para roxo */
+    color: var(--cor-secundaria); 
     border-bottom: 2px solid var(--cor-borda); 
     padding-bottom: 5px;
     margin-top: 30px;
@@ -57,10 +60,9 @@ hr {
     width: 90%;
 }
 
-/* * ------------------------------------
- * Estilos do Formulário de Cadastro
- * ------------------------------------
- */
+/* -------------------------------------- */
+/* ESTILOS DO FORMULÁRIO (Layout CSS Grid) */
+/* -------------------------------------- */
 
 #cadastro-filme {
     max-width: 600px;
@@ -69,10 +71,25 @@ hr {
     background-color: var(--cor-fundo-card);
     border-radius: 8px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+    /* Layout Grid */
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    gap: 15px 20px; 
+}
+
+/* Título, Imagem URL, Sinopse e H2 do formulário ocupam 2 colunas */
+#cadastro-filme h2, /* Adicionado h2 para ocupar toda a largura */
+#cadastro-filme div:nth-child(1), /* Título */
+#cadastro-filme div:nth-child(2), /* Imagem URL */
+#cadastro-filme div:nth-child(3), /* Sinopse */
+#cadastro-filme button {
+    grid-column: 1 / 3; 
 }
 
 #cadastro-filme div {
-    margin-bottom: 15px;
+    margin-bottom: 0; /* Ajustado para o Grid */
+    display: block; 
 }
 
 label {
@@ -83,36 +100,45 @@ label {
 }
 
 input[type="text"],
-textarea {
-    /* MELHORIA: Simplificado para 100% pois o box-sizing já foi definido globalmente */
+input[type="number"],
+input[type="url"],
+select,
+textarea { 
     width: 100%; 
     padding: 10px;
     border: 1px solid var(--cor-borda);
     border-radius: 4px;
-    /* Removido: box-sizing: border-box; (agora está no * seletor) */
+    font-size: 16px;
+    box-sizing: border-box; 
     transition: border-color 0.3s;
 }
 
 input[type="text"]:focus,
+input[type="number"]:focus,
+input[type="url"]:focus,
+select:focus,
 textarea:focus {
+    /* Cor de foco alterada para roxo */
     border-color: var(--cor-primaria);
     outline: none;
 }
 
 textarea {
     resize: vertical;
-    min-height: 100px;
+    min-height: 100px; 
 }
 
-/* * ------------------------------------
- * Estilos do Botão
+
+/* ------------------------------------
+ * Estilos do Botão de Envio
  * ------------------------------------
  */
 
-button[type="submit"] {
+#cadastro-filme button[type="submit"] {
     display: block;
     width: 100%;
     padding: 12px;
+    /* Cor alterada para roxo primário */
     background-color: var(--cor-primaria);
     color: white;
     border: none;
@@ -123,332 +149,52 @@ button[type="submit"] {
     margin-top: 10px;
 }
 
-button[type="submit"]:hover {
+#cadastro-filme button[type="submit"]:hover {
+    /* Cor alterada para roxo secundário */
     background-color: var(--cor-secundaria);
 }
 
-button[type="submit"]:active {
+#cadastro-filme button[type="submit"]:active {
     transform: scale(0.99);
-}
-
-/* * ------------------------------------
- * Estilos da Lista de Filmes
- * ------------------------------------
- */
-
-#lista-filmes {
-    max-width: 900px;
-    margin: 20px auto 50px auto;
-    padding: 0 20px;
-}
-
-#lista-filmes > p {
-    /* Estilo para a mensagem inicial "Nenhum filme cadastrado ainda." */
-    text-align: center;
-    color: #666;
-    padding: 20px;
-    border: 1px dashed var(--cor-borda);
-    border-radius: 4px;
-    background-color: #fff;
-}
-
-/* Estilo para o cartão de filme (será gerado pelo JS) */
-.filme-card {
-    background-color: var(--cor-fundo-card);
-    border: 1px solid var(--cor-borda);
-    border-left: 5px solid var(--cor-secundaria); /* Detalhe roxo na lateral */
-    border-radius: 6px;
-    padding: 15px;
-    margin-bottom: 15px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-    display: flex; 
-    flex-direction: column;
-    position: relative;
-}
-
-.filme-card h3 {
-    margin-top: 0;
-    color: var(--cor-primaria);
-    font-size: 1.4em;
-    margin-bottom: 5px;
-}
-
-.filme-card p {
-    margin: 5px 0 10px 0;
-    font-size: 0.95em;
-    color: var(--cor-texto);
-}
-
-/* Estilo para o botão de remover dentro do card (se adicionado futuramente) */
-.btn-remover {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background-color: var(--cor-erro);
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 3px;
-    cursor: pointer;
-    font-size: 0.8em;
-    transition: background-color 0.3s;
-}
-
-.btn-remover:hover {
-    background-color: #912ab0; 
-}
-
-/* Adicionar o select aqui */
-select, 
-input[type="number"] { 
-    width: 100%; 
-    padding: 10px;
-    border: 1px solid var(--cor-borda);
-    border-radius: 4px;
-    transition: border-color 0.3s;
-    /* Certifique-se que inputs e select tenham a mesma altura */
-    height: 40px; 
-}
-
-/* Estilos básicos para o corpo */
-body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    background-color: #f4f4f4;
-    color: #333;
-}
-
-h1, h2 {
-    color: #0056b3;
-    border-bottom: 2px solid #ccc;
-    padding-bottom: 5px;
-}
-
-/* Estilos do Formulário */
-#cadastro-filme {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-}
-
-#cadastro-filme div {
-    margin-bottom: 15px;
-    display: flex;
-    flex-direction: column;
-}
-
-#cadastro-filme label {
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-#cadastro-filme input[type="text"],
-#cadastro-filme input[type="number"],
-#cadastro-filme input[type="url"],
-#cadastro-filme select,
-#cadastro-filme textarea {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
-    width: 100%; /* Ajusta a largura para 100% do contêiner div */
-    box-sizing: border-box; /* Inclui padding e borda na largura total */
-}
-
-#cadastro-filme textarea {
-    resize: vertical;
-}
-
-#cadastro-filme button {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-}
-
-#cadastro-filme button:hover {
-    background-color: #0056b3;
-}
-
-/* Estilos da Lista de Filmes (Cards) */
-#lista-filmes {
-    margin-top: 20px;
-}
-
-.filme-card {
-    border: 1px solid #ccc;
-    padding: 15px;
-    margin-bottom: 15px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    
-    /* Layout para alinhar a imagem e o texto */
-    display: flex; 
-    gap: 20px;
-}
-
-.filme-imagem {
-    max-width: 150px; /* Limita o tamanho do poster */
-    height: auto;
-    object-fit: cover;
-    border-radius: 5px;
-    flex-shrink: 0; /* Impede que a imagem encolha */
-}
-
-.filme-info {
-    flex-grow: 1;
-}
-
-.filme-card h3 {
-    margin-top: 0;
-    color: #333;
-}
-
-.filme-card p {
-    margin: 5px 0;
-}
-
-.btn-remover {
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-    margin-top: 10px;
-    transition: background-color 0.3s ease;
-}
-
-.btn-remover:hover {
-    background-color: #c82333;
-}
-
-#mensagem-vazia {
-    color: #666;
-    font-style: italic;
-    text-align: center;
-    padding: 20px;
-    border: 1px dashed #ccc;
-    border-radius: 5px;
-}
-
-/* Estilos básicos para o corpo */
-body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-    background-color: #f4f4f4;
-    color: #333;
-}
-
-h1, h2 {
-    color: #0056b3;
-    border-bottom: 2px solid #ccc;
-    padding-bottom: 5px;
-}
-
-/* -------------------------------------- */
-/* ESTILOS DO FORMULÁRIO (Layout Flexbox) */
-/* -------------------------------------- */
-#cadastro-filme {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
-
-    /* Usa CSS Grid para o layout do formulário */
-    display: grid;
-    /* Define duas colunas de tamanho igual (1fr) */
-    grid-template-columns: 1fr 1fr; 
-    gap: 15px 20px; /* Espaço vertical e horizontal entre os itens */
-}
-
-/* Garante que o título, sinopse e botão ocupem toda a largura */
-#cadastro-filme div:nth-child(1), /* Título */
-#cadastro-filme div:nth-child(2), /* Imagem URL */
-#cadastro-filme div:nth-child(3), /* Sinopse */
-#cadastro-filme button {
-    grid-column: 1 / 3; /* Ocupa as duas colunas */
-}
-
-/* O resto dos campos (Diretor, Duração, Faixa Etária, Ano, Gênero, Nota) 
-   serão colocados automaticamente lado a lado pela regra 'grid-template-columns'. */
-
-#cadastro-filme div {
-    /* Reseta o display flex/column que estava antes,
-       deixando apenas o layout que a grid define */
-    margin-bottom: 0;
-    display: block; 
-}
-
-#cadastro-filme label {
-    display: block; /* Garante que a label ocupe sua própria linha na div */
-    margin-bottom: 5px;
-    font-weight: bold;
-}
-
-#cadastro-filme input[type="text"],
-#cadastro-filme input[type="number"],
-#cadastro-filme input[type="url"],
-#cadastro-filme select,
-#cadastro-filme textarea {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 16px;
-    width: 100%;
-    box-sizing: border-box;
-}
-
-#cadastro-filme textarea {
-    resize: vertical;
-}
-
-#cadastro-filme button {
-    background-color: #007bff;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 16px;
-    transition: background-color 0.3s ease;
-    width: 100%; /* Botão ocupa a largura total */
-}
-
-#cadastro-filme button:hover {
-    background-color: #0056b3;
 }
 
 /* -------------------------------------- */
 /* ESTILOS DA LISTA DE FILMES */
 /* -------------------------------------- */
 #lista-filmes {
-    margin-top: 20px;
+    max-width: 900px;
+    margin: 20px auto 50px auto;
+    padding: 0 20px;
+}
+
+/* Estilo para a mensagem "Nenhum filme cadastrado ainda." */
+#mensagem-vazia {
+    color: #666;
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
+    border: 1px dashed var(--cor-borda);
+    border-radius: 5px;
+    background-color: var(--cor-fundo-card);
 }
 
 .filme-card {
-    border: 1px solid #ccc;
+    background-color: var(--cor-fundo-card);
+    border: 1px solid var(--cor-borda);
+    /* Detalhe lateral roxo */
+    border-left: 5px solid var(--cor-secundaria); 
+    border-radius: 6px;
     padding: 15px;
     margin-bottom: 15px;
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
     
-    /* Layout para alinhar a imagem e o texto */
+    /* Layout Flexbox */
     display: flex; 
     gap: 20px;
 }
 
 .filme-imagem {
-    max-width: 150px; /* Limita o tamanho do poster */
+    max-width: 150px; 
     height: auto;
     object-fit: cover;
     border-radius: 5px;
@@ -461,15 +207,21 @@ h1, h2 {
 
 .filme-card h3 {
     margin-top: 0;
-    color: #333;
+    /* Cor alterada para roxo primário */
+    color: var(--cor-primaria);
+    font-size: 1.4em;
+    margin-bottom: 5px;
 }
 
 .filme-card p {
     margin: 5px 0;
+    color: var(--cor-texto);
 }
 
+/* Botão de Remover */
 .btn-remover {
-    background-color: #dc3545;
+    /* Mantido como cor de erro (vermelho) */
+    background-color: var(--cor-erro);
     color: white;
     border: none;
     padding: 5px 10px;
@@ -480,32 +232,24 @@ h1, h2 {
 }
 
 .btn-remover:hover {
-    background-color: #c82333;
+    /* Mantido como cor de erro mais escura */
+    background-color: var(--cor-erro-hover);
 }
 
-#mensagem-vazia {
-    color: #666;
-    font-style: italic;
-    text-align: center;
-    padding: 20px;
-    border: 1px dashed #ccc;
-    border-radius: 5px;
-}
 
 /* Opcional: Layout responsivo para telas pequenas */
 @media (max-width: 600px) {
     #cadastro-filme {
-        /* Em telas menores, volta a ter apenas uma coluna */
         grid-template-columns: 1fr;
         gap: 15px;
     }
+    /* Regra para garantir que todos os itens do formulário fiquem em 1 coluna */
     #cadastro-filme div {
-        /* Remove a regra de coluna para que todos os itens ocupem 1fr */
         grid-column: auto !important; 
     }
     
     .filme-card {
-        flex-direction: column; /* Pilha a imagem e as informações */
+        flex-direction: column; 
         align-items: center;
         text-align: center;
     }
