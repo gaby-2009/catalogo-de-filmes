@@ -86,9 +86,24 @@
         <p id="mensagem-vazia">Nenhum filme cadastrado ainda.</p>
     </div>
 
-   <script>
+    <script>
         // 1. ARMAZENAMENTO DE DADOS
         const catalogo = [];
+
+        // ------------------------------------
+        // FILME DE EXEMPLO ADICIONADO AQUI
+        // ------------------------------------
+        catalogo.push({
+            titulo: "O Mistério do Roxo Profundo",
+            imagemURL: "https://i.imgur.com/gK9u5lA.png", // Imagem de exemplo
+            sinopse: "Um detetive obcecado por cores deve desvendar a verdade por trás de um crime em que a única pista é uma mancha de cor primária em uma tela vazia.",
+            diretor: "Ava Violeta",
+            duracao: 118, // 1h 58min
+            faixaEtaria: "14 anos",
+            ano: 2024, 
+            genero: "Suspense",
+            nota: 8.5,
+        });
 
         // 2. CAPTURA DE ELEMENTOS DO DOM (Input e Contêineres)
         const form = document.getElementById('cadastro-filme');
@@ -110,31 +125,19 @@
         // ------------------------------------
         // FUNÇÃO AUXILIAR: GERAR ESTRELAS
         // ------------------------------------
-        /**
-         * Gera a string HTML de estrelas com base na nota (0 a 10).
-         * @param {number} nota - A nota do filme.
-         * @returns {string} HTML com ícones de estrelas.
-         */
         function gerarEstrelas(nota) {
-            // Arredonda a nota para o 0.5 mais próximo
             const notaArredondada = Math.round(nota * 2) / 2;
             let estrelasHtml = '';
             
-            // O catálogo de estrelas será baseado em 5 estrelas (cada estrela = 2 pontos)
             for (let i = 1; i <= 5; i++) {
                 if (i <= notaArredondada) {
-                    // Estrela Cheia
                     estrelasHtml += '<span class="estrela cheia">★</span>';
                 } else if (i - 0.5 === notaArredondada) {
-                    // Meia Estrela
                     estrelasHtml += '<span class="estrela metade">★</span>';
                 } else {
-                    // Estrela Vazia (usando um ícone vazio ou cor mais clara no CSS)
-                    // Usaremos a estrela cheia, mas o CSS fará com que pareça vazia
                     estrelasHtml += '<span class="estrela vazia">★</span>';
                 }
             }
-            // Adiciona a nota numérica ao final, mantendo a precisão de 1 casa decimal
             estrelasHtml += `<span class="nota-valor"> (${nota.toFixed(1)}/10)</span>`;
 
             return estrelasHtml;
@@ -175,7 +178,7 @@
                 filmeCard.classList.add('filme-card');
                 
                 const duracaoFormatada = formatarDuracao(filme.duracao);
-                const estrelasHtml = gerarEstrelas(filme.nota); // Chama a nova função
+                const estrelasHtml = gerarEstrelas(filme.nota); 
                 
                 filmeCard.innerHTML = `
                     <img src="${filme.imagemURL}" alt="Poster do filme ${filme.titulo}" class="filme-imagem">
@@ -207,6 +210,7 @@
         form.addEventListener('submit', function(event) {
             event.preventDefault();
 
+            // Pega o texto visível das opções selecionadas
             const generoTexto = selectGenero.options[selectGenero.selectedIndex].text;
             const faixaEtariaTexto = selectFaixaEtaria.options[selectFaixaEtaria.selectedIndex].text;
 
