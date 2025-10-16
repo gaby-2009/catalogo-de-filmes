@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catálogo de Filmes - Fase 1: Cadastro Manual (DOM Básico)</title>
     
-    <link rel="stylesheet" href="style.css"> 
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <h1>Catálogo de Filmes</h1>
@@ -24,8 +24,30 @@
         </div>
 
         <div>
+            <label for="diretor">Diretor:</label>
+            <input type="text" id="diretor" required>
+        </div>
+
+        <div>
+            <label for="duracao">Duração (minutos):</label>
+            <input type="number" id="duracao" min="1" required>
+        </div>
+
+        <div>
+            <label for="faixa-etaria">Faixa Etária:</label>
+            <select id="faixa-etaria" required>
+                <option value="">-- Selecione a Faixa --</option>
+                <option value="Livre">Livre</option>
+                <option value="10">10 anos</option>
+                <option value="12">12 anos</option>
+                <option value="14">14 anos</option>
+                <option value="16">16 anos</option>
+                <option value="18">18 anos</option>
+            </select>
+        </div>
+        <div>
             <label for="ano">Ano de Lançamento:</label>
-            <input type="number" id="ano" min="1888" max="2099" required> 
+            <input type="number" id="ano" min="1888" max="2099" required>
         </div>
 
         <div>
@@ -72,32 +94,39 @@
         const inputAno = document.getElementById('ano');
         const selectGenero = document.getElementById('genero');
         const inputNota = document.getElementById('nota');
+        
+        // NOVAS CAPTURAS DE ELEMENTOS
+        const inputDiretor = document.getElementById('diretor');
+        const inputDuracao = document.getElementById('duracao');
+        const selectFaixaEtaria = document.getElementById('faixa-etaria');
 
 
         // ------------------------------------
-        // FUNÇÃO DE REMOÇÃO (Simplificada, não precisa de elementoDOM)
+        // FUNÇÃO DE REMOÇÃO (Otimizada)
         // ------------------------------------
         function removerFilme(indice) {
             catalogo.splice(indice, 1);
-            
-            // Redesenha a lista. Isso atualiza o DOM e corrige os índices.
             renderizarCatalogo();
         }
 
+        // Função auxiliar para formatar minutos em H:MM
+        function formatarDuracao(minutos) {
+            const horas = Math.floor(minutos / 60);
+            const mins = minutos % 60;
+            return `${horas}h ${mins}min`;
+        }
 
         // ------------------------------------
-        // FUNÇÃO DE RENDERIZAÇÃO (Desenha o HTML)
+        // FUNÇÃO DE RENDERIZAÇÃO (Desenha o HTML com novos campos)
         // ------------------------------------
         function renderizarCatalogo() {
             listaFilmesContainer.innerHTML = '';
             
             if (catalogo.length === 0) {
-                // Adiciona a mensagem e a exibe
                 listaFilmesContainer.appendChild(mensagemVazia);
                 mensagemVazia.style.display = 'block';
                 return;
             } else {
-                // Oculta a mensagem
                 mensagemVazia.style.display = 'none';
             }
 
@@ -105,19 +134,22 @@
                 const filmeCard = document.createElement('div');
                 filmeCard.classList.add('filme-card');
                 
+                // Variável para formatar a duração
+                const duracaoFormatada = formatarDuracao(filme.duracao);
+
                 filmeCard.innerHTML = `
                     <h3>${filme.titulo} (${filme.ano})</h3>
+                    <p><strong>Diretor:</strong> ${filme.diretor}</p>
                     <p><strong>Gênero:</strong> ${filme.genero}</p>
+                    <p><strong>Duração:</strong> ${duracaoFormatada}</p>
+                    <p><strong>Faixa Etária:</strong> ${filme.faixaEtaria}</p>
                     <p class="nota"><strong>Nota:</strong> <span class="nota-valor">${filme.nota.toFixed(1)}</span>/10</p>
                     <p><strong>Sinopse:</strong> ${filme.sinopse}</p>
-                    <button class="btn-remover" data-index="${index}">Remover</button>
+                    <button class="btn-remover">Remover</button>
                 `;
                 
                 const btnRemover = filmeCard.querySelector('.btn-remover');
-                
-                // Agora passamos apenas o índice (index) para a função removerFilme
                 btnRemover.addEventListener('click', () => {
-                    // O uso do 'index' aqui no forEach vai usar o índice do filme no array 'catalogo'
                     removerFilme(index); 
                 });
 
@@ -126,19 +158,23 @@
         }
 
         // ------------------------------------
-        // FUNÇÃO DE CADASTRO (Ao enviar o formulário)
+        // FUNÇÃO DE CADASTRO (Ao enviar o formulário, incluindo novos dados)
         // ------------------------------------
         form.addEventListener('submit', function(event) {
             event.preventDefault();
 
-            // Pega o texto visível da opção selecionada
+            // Pega o texto visível das opções selecionadas
             const generoTexto = selectGenero.options[selectGenero.selectedIndex].text;
+            const faixaEtariaTexto = selectFaixaEtaria.options[selectFaixaEtaria.selectedIndex].text;
 
             const novoFilme = {
                 titulo: inputTitulo.value,
                 sinopse: inputSinopse.value,
+                diretor: inputDiretor.value,     // NOVO
+                duracao: Number(inputDuracao.value), // NOVO (como número)
+                faixaEtaria: faixaEtariaTexto,   // NOVO (texto visível)
                 ano: Number(inputAno.value), 
-                genero: generoTexto, // Usando a variável
+                genero: generoTexto,
                 nota: Number(inputNota.value),
             };
 
