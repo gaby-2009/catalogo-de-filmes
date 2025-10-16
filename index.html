@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catálogo de Filmes - Fase 1: Cadastro Manual (DOM Básico)</title>
+    
+    <link rel="stylesheet" href="style.css"> 
+</head>
+<body>
+    <h1>Catálogo de Filmes</h1>
+    
+    <form id="cadastro-filme">
+        <h2>Adicionar Novo Filme</h2>
+        
+        <div>
+            <label for="titulo">Título do Filme:</label>
+            <input type="text" id="titulo" required>
+        </div>
+
+        <div>
+            <label for="sinopse">Sinopse:</label>
+            <textarea id="sinopse" required></textarea>
+        </div>
+
+        <div>
+            <label for="ano">Ano de Lançamento:</label>
+            <input type="number" id="ano" min="1888" max="2099" required> 
+        </div>
+
+        <div>
+            <label for="genero">Gênero:</label>
+            <select id="genero" required>
+                <option value="">-- Selecione o Gênero --</option>
+                <option value="Acao">Ação</option>
+                <option value="Comedia">Comédia</option>
+                <option value="Drama">Drama</option>
+                <option value="Ficcao">Ficção Científica</option>
+                <option value="Terror">Terror</option>
+                <option value="Documentario">Documentário</option>
+                <option value="Outro">Outro</option>
+            </select>
+        </div>
+        
+        <div>
+            <label for="nota">Nota (0 a 10):</label>
+            <input type="number" id="nota" min="0" max="10" step="0.1" required>
+        </div>
+        
+        <button type="submit">Adicionar Filme</button>
+    </form>
+     
+    <hr>
+
+    <h2>Minha lista de filmes</h2>
+
+    <div id="lista-filmes">
+        <p id="mensagem-vazia">Nenhum filme cadastrado ainda.</p>
+    </div>
+
+    <script>
+        // 1. ARMAZENAMENTO DE DADOS
+        const catalogo = [];
+
+        // 2. CAPTURA DE ELEMENTOS DO DOM (Input e Contêineres)
+        const form = document.getElementById('cadastro-filme');
+        const listaFilmesContainer = document.getElementById('lista-filmes');
+        const mensagemVazia = document.getElementById('mensagem-vazia');
+        
+        const inputTitulo = document.getElementById('titulo');
+        const inputSinopse = document.getElementById('sinopse');
+        const inputAno = document.getElementById('ano');
+        const selectGenero = document.getElementById('genero');
+        const inputNota = document.getElementById('nota');
+
+
+        // ------------------------------------
+        // FUNÇÃO DE REMOÇÃO (Simplificada, não precisa de elementoDOM)
+        // ------------------------------------
+        function removerFilme(indice) {
+            catalogo.splice(indice, 1);
+            
+            // Redesenha a lista. Isso atualiza o DOM e corrige os índices.
+            renderizarCatalogo();
+        }
+
+
+        // ------------------------------------
+        // FUNÇÃO DE RENDERIZAÇÃO (Desenha o HTML)
+        // ------------------------------------
+        function renderizarCatalogo() {
+            listaFilmesContainer.innerHTML = '';
+            
+            if (catalogo.length === 0) {
+                // Adiciona a mensagem e a exibe
+                listaFilmesContainer.appendChild(mensagemVazia);
+                mensagemVazia.style.display = 'block';
+                return;
+            } else {
+                // Oculta a mensagem
+                mensagemVazia.style.display = 'none';
+            }
+
+            catalogo.forEach((filme, index) => {
+                const filmeCard = document.createElement('div');
+                filmeCard.classList.add('filme-card');
+                
+                filmeCard.innerHTML = `
+                    <h3>${filme.titulo} (${filme.ano})</h3>
+                    <p><strong>Gênero:</strong> ${filme.genero}</p>
+                    <p class="nota"><strong>Nota:</strong> <span class="nota-valor">${filme.nota.toFixed(1)}</span>/10</p>
+                    <p><strong>Sinopse:</strong> ${filme.sinopse}</p>
+                    <button class="btn-remover" data-index="${index}">Remover</button>
+                `;
+                
+                const btnRemover = filmeCard.querySelector('.btn-remover');
+                
+                // Agora passamos apenas o índice (index) para a função removerFilme
+                btnRemover.addEventListener('click', () => {
+                    // O uso do 'index' aqui no forEach vai usar o índice do filme no array 'catalogo'
+                    removerFilme(index); 
+                });
+
+                listaFilmesContainer.appendChild(filmeCard);
+            });
+        }
+
+        // ------------------------------------
+        // FUNÇÃO DE CADASTRO (Ao enviar o formulário)
+        // ------------------------------------
+        form.addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Pega o texto visível da opção selecionada
+            const generoTexto = selectGenero.options[selectGenero.selectedIndex].text;
+
+            const novoFilme = {
+                titulo: inputTitulo.value,
+                sinopse: inputSinopse.value,
+                ano: Number(inputAno.value), 
+                genero: generoTexto, // Usando a variável
+                nota: Number(inputNota.value),
+            };
+
+            catalogo.push(novoFilme);
+            renderizarCatalogo();
+            form.reset();
+            inputTitulo.focus(); 
+        });
+        
+        // RENDERIZAÇÃO INICIAL
+        renderizarCatalogo();
+    </script>
+</body>
+</html>
