@@ -209,3 +209,132 @@ input[type="number"] {
     /* Certifique-se que inputs e select tenham a mesma altura */
     height: 40px; 
 }
+
+/* Estilos básicos para o corpo */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+h1, h2 {
+    color: #0056b3;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 5px;
+}
+
+/* Estilos do Formulário */
+#cadastro-filme {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+#cadastro-filme div {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+#cadastro-filme label {
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+#cadastro-filme input[type="text"],
+#cadastro-filme input[type="number"],
+#cadastro-filme input[type="url"],
+#cadastro-filme select,
+#cadastro-filme textarea {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    width: 100%; /* Ajusta a largura para 100% do contêiner div */
+    box-sizing: border-box; /* Inclui padding e borda na largura total */
+}
+
+#cadastro-filme textarea {
+    resize: vertical;
+}
+
+#cadastro-filme button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+#cadastro-filme button:hover {
+    background-color: #0056b3;
+}
+
+/* Estilos da Lista de Filmes (Cards) */
+#lista-filmes {
+    margin-top: 20px;
+}
+
+.filme-card {
+    border: 1px solid #ccc;
+    padding: 15px;
+    margin-bottom: 15px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    
+    /* Layout para alinhar a imagem e o texto */
+    display: flex; 
+    gap: 20px;
+}
+
+.filme-imagem {
+    max-width: 150px; /* Limita o tamanho do poster */
+    height: auto;
+    object-fit: cover;
+    border-radius: 5px;
+    flex-shrink: 0; /* Impede que a imagem encolha */
+}
+
+.filme-info {
+    flex-grow: 1;
+}
+
+.filme-card h3 {
+    margin-top: 0;
+    color: #333;
+}
+
+.filme-card p {
+    margin: 5px 0;
+}
+
+.btn-remover {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-remover:hover {
+    background-color: #c82333;
+}
+
+#mensagem-vazia {
+    color: #666;
+    font-style: italic;
+    text-align: center;
+    padding: 20px;
+    border: 1px dashed #ccc;
+    border-radius: 5px;
+}
