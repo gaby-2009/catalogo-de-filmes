@@ -6,6 +6,54 @@
     <title>Catálogo de Filmes - Fase 1: Cadastro Manual (DOM Básico)</title>
     
     <link rel="stylesheet" href="style.css"> 
+    <style>
+        /* Adicionei um estilo básico para a barra de pesquisa ficar organizada */
+        #busca-filme {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        /* Estilos adicionais para melhor visualização (Recomendado colocar em style.css) */
+        .filme-card {
+            display: flex;
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+        }
+        .filme-imagem {
+            width: 100px; /* Tamanho fixo para a imagem */
+            height: 150px;
+            object-fit: cover;
+            margin-right: 15px;
+            border-radius: 4px;
+        }
+        .filme-info {
+            flex-grow: 1;
+        }
+        .nota {
+            margin: 5px 0;
+        }
+        .estrela {
+            font-size: 1.2em;
+            color: gray;
+        }
+        .cheia {
+            color: gold;
+        }
+        .metade {
+            /* Poderia ser um ícone de meia estrela, mas usei a mesma cor para simplificar */
+            color: orange; 
+        }
+        .vazia {
+            color: #ddd;
+        }
+    </style>
 </head>
 <body>
     <h1>𝒞𝒶𝓉𝒶́𝓁ℴℊℴ 𝒹ℯ ℱ𝒾𝓁𝓂ℯ𝓈</h1>
@@ -81,6 +129,8 @@
     <hr>
 
     <h2>ℳ𝒾𝓃𝒽𝒶 𝓁𝒾𝓈𝓉𝒶 𝒹ℯ 𝒻𝒾𝓁𝓂ℯ𝓈</h2>
+    
+    <input type="text" id="busca-filme" placeholder="🔍 Pesquisar filmes por título...">
 
     <div id="lista-filmes">
         <p id="mensagem-vazia">Nenhum filme cadastrado ainda.</p>
@@ -94,7 +144,7 @@
         // FILME DE EXEMPLO ADICIONADO AQUI
         // ------------------------------------
         catalogo.push({
-            titulo: "Exemplo",
+            titulo: "Um Mistério de Cores",
             imagemURL: "https://i.imgur.com/gK9u5lA.png", // Imagem de exemplo
             sinopse: "Um detetive obcecado por cores deve desvendar a verdade por trás de um crime em que a única pista é uma mancha de cor primária em uma tela vazia.",
             diretor: "Ava Violeta",
@@ -104,6 +154,19 @@
             genero: "Suspense",
             nota: 8.5,
         });
+        
+        catalogo.push({
+            titulo: "A Viagem no Tempo",
+            imagemURL: "https://via.placeholder.com/100x150?text=Viagem", // Outra Imagem de exemplo
+            sinopse: "Cientistas descobrem a chave para viajar no tempo, mas a primeira missão tem consequências inesperadas para o futuro da humanidade.",
+            diretor: "Dr. Chronos",
+            duracao: 145,
+            faixaEtaria: "Livre",
+            ano: 2023, 
+            genero: "Ficção Científica",
+            nota: 9.2,
+        });
+
 
         // 2. CAPTURA DE ELEMENTOS DO DOM (Input e Contêineres)
         const form = document.getElementById('cadastro-filme');
@@ -120,6 +183,9 @@
         const inputDuracao = document.getElementById('duracao');
         const selectFaixaEtaria = document.getElementById('faixa-etaria');
         const inputImagemURL = document.getElementById('imagem-url');
+        
+        // NOVO ELEMENTO: Input de Busca
+        const inputBusca = document.getElementById('busca-filme');
 
 
         // ------------------------------------
@@ -147,9 +213,14 @@
         // ------------------------------------
         // FUNÇÃO DE REMOÇÃO (Otimizada)
         // ------------------------------------
-        function removerFilme(indice) {
-            catalogo.splice(indice, 1);
-            renderizarCatalogo();
+        function removerFilme(tituloRemover) {
+            // Encontra o índice do filme a ser removido pelo título
+            const index = catalogo.findIndex(filme => filme.titulo === tituloRemover);
+            
+            if (index !== -1) {
+                catalogo.splice(index, 1);
+                renderizarCatalogo(); // Rerenderiza a lista após a remoção
+            }
         }
 
         // Função auxiliar para formatar minutos em H:MM
@@ -161,11 +232,23 @@
 
         // ------------------------------------
         // FUNÇÃO DE RENDERIZAÇÃO (Desenha o HTML com estrelas)
+        // Adicionada lógica de filtro
         // ------------------------------------
         function renderizarCatalogo() {
             listaFilmesContainer.innerHTML = '';
             
-            if (catalogo.length === 0) {
+            // 1. Aplicar Filtro
+            const termoBusca = inputBusca.value.toLowerCase().trim();
+            const filmesFiltrados = catalogo.filter(filme => 
+                filme.titulo.toLowerCase().includes(termoBusca)
+            );
+            
+            if (filmesFiltrados.length === 0) {
+                // Exibe a mensagem de vazio ou de nenhum resultado encontrado
+                mensagemVazia.textContent = termoBusca ? 
+                    `Nenhum filme encontrado com o título "${termoBusca}".` : 
+                    "Nenhum filme cadastrado ainda.";
+                    
                 listaFilmesContainer.appendChild(mensagemVazia);
                 mensagemVazia.style.display = 'block';
                 return;
@@ -173,7 +256,8 @@
                 mensagemVazia.style.display = 'none';
             }
 
-            catalogo.forEach((filme, index) => {
+            // 2. Renderizar a lista filtrada
+            filmesFiltrados.forEach((filme) => {
                 const filmeCard = document.createElement('div');
                 filmeCard.classList.add('filme-card');
                 
@@ -196,13 +280,20 @@
                 `;
                 
                 const btnRemover = filmeCard.querySelector('.btn-remover');
+                // Alterei o manipulador de remoção para usar o título, pois o índice 
+                // muda quando a lista é filtrada!
                 btnRemover.addEventListener('click', () => {
-                    removerFilme(index); 
+                    removerFilme(filme.titulo); 
                 });
 
                 listaFilmesContainer.appendChild(filmeCard);
             });
         }
+
+        // ------------------------------------
+        // EVENTO: BARRA DE PESQUISA (Filtra ao digitar)
+        // ------------------------------------
+        inputBusca.addEventListener('input', renderizarCatalogo); 
 
         // ------------------------------------
         // FUNÇÃO DE CADASTRO (Ao enviar o formulário)
@@ -227,6 +318,8 @@
             };
 
             catalogo.push(novoFilme);
+            // Limpa o filtro de busca ao adicionar um novo filme
+            inputBusca.value = ''; 
             renderizarCatalogo();
             form.reset();
             inputTitulo.focus(); 
