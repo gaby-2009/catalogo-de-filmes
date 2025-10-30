@@ -86,11 +86,19 @@
     <h1>𝒞𝒶𝓉𝒶́𝓁ℴℊℴ 𝒹ℯ ℱ𝒾𝓁𝓂ℯ𝓈</h1>
     
     <div id="busca-api-container">
-        <h2>Adicionar Filme por Busca (OMDb)</h2>
+        <h2>Adicionar Filme por Busca</h2>
         <input type="text" id="input-busca-api" placeholder="Digite o título do filme a buscar (Ex: The Matrix)">
         <button id="btn-buscar-api">Buscar e Adicionar</button>
         <p id="resultado-api"></p>
     </div>
+    
+    <hr> <h2>ℳ𝒾𝓃𝒽𝒶 𝓁𝒾𝓈𝓉𝒶 𝒹ℯ 𝒻𝒾𝓁𝓂ℯ𝓈</h2>
+    <input type="text" id="busca-filme" placeholder="Filtre os filmes por título...">
+    <div id="lista-filmes">
+        <p id="mensagem-vazia" style="display: none;"></p>
+    </div>
+
+    <hr>
     
     <form id="cadastro-filme">
         <h2>Adicionar Novo Filme (Manual)</h2>
@@ -121,9 +129,6 @@
         <button type="submit">Adicionar Filme</button>
     </form>
      
-    <hr>
-
-    <h2>ℳ𝒾𝓃𝒽𝒶 𝓁𝒾𝓈𝓉𝒶 𝒹ℯ 𝒻𝒾𝓁𝓂ℯ𝓈</h2>
     
     <script>
         const OMDb_API_KEY = '4c42996f'; 
@@ -270,7 +275,8 @@
             btnBuscarApi.disabled = true;
 
             try {
-                const url = ` http://www.omdbapi.com/?i=${encodeURIComponent(tituloBusca)}&apikey=${OMDb_API_KEY}`;
+                // Buscando por título (t=) para ter dados mais detalhados e específicos
+                const url = ` http://www.omdbapi.com/?t=${encodeURIComponent(tituloBusca)}&apikey=${OMDb_API_KEY}`;
                 const response = await fetch(url);
                 const dados = await response.json();
 
