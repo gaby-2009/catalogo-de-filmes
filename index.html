@@ -260,80 +260,79 @@
         }
         
         // ------------------------------------
-        // NOVO: FUNÇÃO DE BUSCA NA API OMDb (CORRIGIDA)
         // ------------------------------------
-        async function buscarFilmeOMDb() {
-            const tituloBusca = inputBuscaApi.value.trim();
-            resultadoApi.textContent = ''; // Limpa mensagens anteriores
+// NOVO: FUNÇÃO DE BUSCA NA API OMDb (CORRIGIDA)
+// ------------------------------------
+async function buscarFilmeOMDb() {
+    const tituloBusca = inputBuscaApi.value.trim();
+    resultadoApi.textContent = ''; // Limpa mensagens anteriores
+    
+    if (!tituloBusca) {
+        resultadoApi.textContent = "Digite o título do filme.";
+        return;
+    }
+    
+    resultadoApi.textContent = "Buscando...";
+    btnBuscarApi.disabled = true;
+
+    try {
+        const url = `http://www.omdbapi.com/?t=${encodeURIComponent(tituloBusca)}&apikey=${OMDb_API_KEY}`;
+        const response = await fetch(url);
+        const dados = await response.json();
+
+        if (dados.Response === "True") {
             
-            if (!tituloBusca) {
-                resultadoApi.textContent = "Digite o título do filme.";
-                return;
-            }
-            
-            resultadoApi.textContent = "Buscando...";
-            btnBuscarApi.disabled = true;
+            // Converte Duração (ex: "120 min" para 120)
+            const duracaoMinutos = dados.Runtime.match(/\d+/) ? parseInt(dados.Runtime.match(/\d+/)[0]) : 0;
 
-            try {
-                // CORRIGIDO: Usando 't' para buscar por Título, em vez de 'i' (ID do IMDb)
-                const url = `http://www.omdbapi.com/?t=${encodeURIComponent(tituloBusca)}&apikey=${OMDb_API_KEY}`;
-                const response = await fetch(url);
-                const dados = await response.json();
-
-                if (dados.Response === "True") {
-                    
-                    // Converte Duração (ex: "120 min" para 120)
-                    const duracaoMinutos = dados.Runtime.match(/\d+/) ? parseInt(dados.Runtime.match(/\d+/)[0]) : 0;
-
-                    // Mapeia a nota do IMDb (ex: "8.7/10" ou só "8.7")
-                    let notaOmdb = 0;
-                    if (dados.imdbRating && dados.imdbRating !== 'N/A') {
-                        notaOmdb = parseFloat(dados.imdbRating);
-                    } else if (dados.Ratings && dados.Ratings.length > 0) {
-                        // Tenta buscar de outras fontes se a IMDb Rating não estiver disponível
-                        const rating = dados.Ratings.find(r => r.Source.includes('Internet Movie Database') || r.Source.includes('Rotten Tomatoes'));
-                        if (rating) {
-                            // Converte de formato 'X/10' ou 'Y%' para escala 0-10
-                            if (rating.Value.includes('/10')) {
-                                notaOmdb = parseFloat(rating.Value.split('/')[0]);
-                            } else if (rating.Value.includes('%')) {
-                                notaOmdb = parseFloat(rating.Value.replace('%', '')) / 10;
-                            } else {
-                                notaOmdb = parseFloat(rating.Value);
-                            }
-                        }
+            // Mapeia a nota do IMDb (ex: "8.7/10" ou só "8.7")
+            let notaOmdb = 0;
+            if (dados.imdbRating && dados.imdbRating !== 'N/A') {
+                notaOmdb = parseFloat(dados.imdbRating);
+            } else if (dados.Ratings && dados.Ratings.length > 0) {
+                // Tenta buscar de outras fontes se a IMDb Rating não estiver disponível
+                const rating = dados.Ratings.find(r => r.Source.includes('Internet Movie Database') || r.Source.includes('Rotten Tomatoes'));
+                if (rating) {
+                    // Converte de formato 'X/10' ou 'Y%' para escala 0-10
+                    if (rating.Value.includes('/10')) {
+                        notaOmdb = parseFloat(rating.Value.split('/')[0]);
+                    } else if (rating.Value.includes('%')) {
+                        notaOmdb = parseFloat(rating.Value.replace('%', '')) / 10;
+                    } else {
+                        notaOmdb = parseFloat(rating.Value);
                     }
-
-                    // Mapeamento dos dados para o formato do seu catálogo
-                    const novoFilmeOmdb = {
-                        titulo: dados.Title,
-                        imagemURL: dados.Poster !== 'N/A' ? dados.Poster : 'https://via.placeholder.com/100x150?text=Sem+Poster', 
-                        sinopse: dados.Plot !== 'N/A' ? dados.Plot : 'Sinopse não disponível.',
-                        diretor: dados.Director !== 'N/A' ? dados.Director : 'Desconhecido',
-                        duracao: duracaoMinutos, 
-                        faixaEtaria: dados.Rated !== 'N/A' ? dados.Rated : 'Livre',
-                        ano: parseInt(dados.Year), 
-                        genero: dados.Genre.split(', ')[0] || 'Outro', // Pega o primeiro gênero
-                        nota: notaOmdb,
-                    };
-
-                    catalogo.push(novoFilmeOmdb);
-                    renderizarCatalogo();
-                    
-                    resultadoApi.textContent = `✅ Filme "${dados.Title}" adicionado com sucesso!`;
-                    inputBuscaApi.value = ''; // Limpa a caixa de busca
-                    
-                } else {
-                    resultadoApi.textContent = `❌ Filme não encontrado: ${dados.Error || 'Erro desconhecido.'}`;
                 }
-            } catch (error) {
-                console.error("Erro ao buscar filme na OMDb API:", error);
-                resultadoApi.textContent = "⚠️ Erro de conexão ou na API.";
-            } finally {
-                btnBuscarApi.disabled = false;
             }
-        }
 
+            // Mapeamento dos dados para o formato do seu catálogo
+            const novoFilmeOmdb = {
+                titulo: dados.Title,
+                imagemURL: dados.Poster !== 'N/A' ? dados.Poster : 'https://via.placeholder.com/100x150?text=Sem+Poster', 
+                sinopse: dados.Plot !== 'N/A' ? dados.Plot : 'Sinopse não disponível.',
+                diretor: dados.Director !== 'N/A' ? dados.Director : 'Desconhecido',
+                duracao: duracaoMinutos, 
+                faixaEtaria: dados.Rated !== 'N/A' ? dados.Rated : 'Livre',
+                ano: parseInt(dados.Year), 
+                genero: dados.Genre.split(', ')[0] || 'Outro', // Pega o primeiro gênero
+                nota: notaOmdb,
+            };
+
+            catalogo.push(novoFilmeOmdb);
+            renderizarCatalogo();
+            
+            resultadoApi.textContent = `✅ Filme "${dados.Title}" adicionado com sucesso!`;
+            inputBuscaApi.value = ''; // Limpa a caixa de busca
+            
+        } else {
+            resultadoApi.textContent = `❌ Filme não encontrado: ${dados.Error || 'Erro desconhecido.'}`;
+        }
+    } catch (error) {
+        console.error("Erro ao buscar filme na OMDb API:", error);
+        resultadoApi.textContent = "⚠️ Erro de conexão ou na API.";
+    } finally {
+        btnBuscarApi.disabled = false;
+    }
+}
         // ------------------------------------
         // EVENT LISTENERS
         // ------------------------------------
