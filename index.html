@@ -276,7 +276,7 @@
 
             try {
                 // CORRIGIDO: Usando 't' para buscar por Título, em vez de 'i' (ID do IMDb)
-                const url = ` http://www.omdbapi.com/?t=${encodeURIComponent(tituloBusca)}&apikey=${OMDb_API_KEY}`;
+                const url = `http://www.omdbapi.com/?t=${encodeURIComponent(tituloBusca)}&apikey=${OMDb_API_KEY}`;
                 const response = await fetch(url);
                 const dados = await response.json();
 
