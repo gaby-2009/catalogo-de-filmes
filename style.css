@@ -1,9 +1,3 @@
-/*
- * ------------------------------------
- * Estilos Gerais e Configuração
- * ------------------------------------
- */
-
 /* Aplica o box-sizing globalmente para facilitar o cálculo de larguras e paddings */
 *,
 *::before,
@@ -12,7 +6,6 @@
 }
 
 :root {
-    /* Paleta de Cores Roxo */
     --cor-primaria: #6a0dad; /* Roxo Escuro Principal */
     --cor-secundaria: #8a2be2; /* Roxo Médio/Azul-violeta (Usado como tom mais claro ou hover) */
     --cor-fundo: #f0e6ff; /* Roxo Muito Claro (Lavanda) para o fundo */
@@ -20,7 +13,6 @@
     --cor-texto: #333333; /* Texto Escuro */
     --cor-borda: #ccc;
     
-    /* CORES DE ESTADO ALTERADAS PARA VARIAÇÕES ROXAS */
     --cor-erro: var(--cor-secundaria);       /* Roxo claro para o botão de 'Remover' */
     --cor-erro-hover: var(--cor-primaria);   /* Roxo escuro para o hover do 'Remover' */
 }
@@ -33,14 +25,12 @@ body {
 }
 
 h1 {
-    /* Cor alterada para roxo */
     color: var(--cor-primaria);
     border-bottom: 2px solid var(--cor-secundaria);
     padding-bottom: 5px;
 }
 
 h2 {
-    /* Cor alterada para roxo */
     color: var(--cor-secundaria);
     border-bottom: 2px solid var(--cor-borda);
     padding-bottom: 5px;
