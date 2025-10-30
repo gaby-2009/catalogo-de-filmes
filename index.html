@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo de Filmes - Fase 1: Cadastro Manual (DOM Básico)</title>
+    <title>Catálogo de Filmes - Fase 2: Busca por API (OMDb)</title>
     
     <link rel="stylesheet" href="style.css"> 
     <style>
-        /* Adicionei um estilo básico para a barra de pesquisa ficar organizada */
+        /* Estilos existentes e adicionais para melhor visualização */
         #busca-filme {
             width: 100%;
             padding: 10px;
@@ -17,7 +17,6 @@
             border-radius: 4px;
             font-size: 16px;
         }
-        /* Estilos adicionais para melhor visualização (Recomendado colocar em style.css) */
         .filme-card {
             display: flex;
             margin-bottom: 20px;
@@ -27,7 +26,7 @@
             box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
         }
         .filme-imagem {
-            width: 100px; /* Tamanho fixo para a imagem */
+            width: 100px; 
             height: 150px;
             object-fit: cover;
             margin-right: 15px;
@@ -47,82 +46,78 @@
             color: gold;
         }
         .metade {
-            /* Poderia ser um ícone de meia estrela, mas usei a mesma cor para simplificar */
             color: orange; 
         }
         .vazia {
             color: #ddd;
+        }
+
+        /* NOVOS ESTILOS PARA A BUSCA API */
+        #busca-api-container {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #cce5ff;
+            background-color: #e6f2ff;
+            border-radius: 6px;
+        }
+        #busca-api-container input[type="text"] {
+            width: 70%;
+            padding: 8px;
+            margin-right: 10px;
+            border: 1px solid #99c2ff;
+            border-radius: 4px;
+        }
+        #busca-api-container button {
+            padding: 8px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        #resultado-api {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #d9534f;
         }
     </style>
 </head>
 <body>
     <h1>𝒞𝒶𝓉𝒶́𝓁ℴℊℴ 𝒹ℯ ℱ𝒾𝓁𝓂ℯ𝓈</h1>
     
+    <div id="busca-api-container">
+        <h2>Adicionar Filme por Busca (OMDb)</h2>
+        <input type="text" id="input-busca-api" placeholder="Digite o título do filme a buscar (Ex: The Matrix)">
+        <button id="btn-buscar-api">Buscar e Adicionar</button>
+        <p id="resultado-api"></p>
+    </div>
+    
     <form id="cadastro-filme">
-        <h2>Adicionar Novo Filme</h2>
-        
-        <div>
-            <label for="titulo">Título do Filme:</label>
-            <input type="text" id="titulo" required>
-        </div>
-
-        <div>
-            <label for="imagem-url">Imagem do Filme (URL):</label>
-            <input type="url" id="imagem-url" placeholder="Cole o link da imagem (URL)" required>
-        </div>
-
-        <div>
-            <label for="sinopse">Sinopse:</label>
-            <textarea id="sinopse" required></textarea>
-        </div>
-
-        <div>
-            <label for="diretor">Diretor:</label>
-            <input type="text" id="diretor" required>
-        </div>
-
-        <div>
-            <label for="duracao">Duração (minutos):</label>
-            <input type="number" id="duracao" min="1" required>
-        </div>
-
+        <h2>Adicionar Novo Filme (Manual)</h2>
+        <div><label for="titulo">Título do Filme:</label><input type="text" id="titulo" required></div>
+        <div><label for="imagem-url">Imagem do Filme (URL):</label><input type="url" id="imagem-url" placeholder="Cole o link da imagem (URL)" required></div>
+        <div><label for="sinopse">Sinopse:</label><textarea id="sinopse" required></textarea></div>
+        <div><label for="diretor">Diretor:</label><input type="text" id="diretor" required></div>
+        <div><label for="duracao">Duração (minutos):</label><input type="number" id="duracao" min="1" required></div>
         <div>
             <label for="faixa-etaria">Faixa Etária:</label>
             <select id="faixa-etaria" required>
                 <option value="">-- Selecione a Faixa --</option>
-                <option value="Livre">Livre</option>
-                <option value="10">10 anos</option>
-                <option value="12">12 anos</option>
-                <option value="14">14 anos</option>
-                <option value="16">16 anos</option>
-                <option value="18">18 anos</option>
+                <option value="Livre">Livre</option><option value="10">10 anos</option><option value="12">12 anos</option>
+                <option value="14">14 anos</option><option value="16">16 anos</option><option value="18">18 anos</option>
             </select>
         </div>
-
-        <div>
-            <label for="ano">Ano de Lançamento:</label>
-            <input type="number" id="ano" min="1888" max="2099" required>
-        </div>
-
+        <div><label for="ano">Ano de Lançamento:</label><input type="number" id="ano" min="1888" max="2099" required></div>
         <div>
             <label for="genero">Gênero:</label>
             <select id="genero" required>
                 <option value="">-- Selecione o Gênero --</option>
-                <option value="Acao">Ação</option>
-                <option value="Comedia">Comédia</option>
-                <option value="Drama">Drama</option>
-                <option value="Ficcao">Ficção Científica</option>
-                <option value="Terror">Terror</option>
-                <option value="Documentario">Documentário</option>
-                <option value="Outro">Outro</option>
+                <option value="Acao">Ação</option><option value="Comedia">Comédia</option><option value="Drama">Drama</option>
+                <option value="Ficcao">Ficção Científica</option><option value="Terror">Terror</option>
+                <option value="Documentario">Documentário</option><option value="Outro">Outro</option>
             </select>
         </div>
-        
-        <div>
-            <label for="nota">Nota (0 a 10):</label>
-            <input type="number" id="nota" min="0" max="10" step="0.1" required>
-        </div>
-        
+        <div><label for="nota">Nota (0 a 10):</label><input type="number" id="nota" min="0" max="10" step="0.1" required></div>
         <button type="submit">Adicionar Filme</button>
     </form>
      
@@ -130,71 +125,60 @@
 
     <h2>ℳ𝒾𝓃𝒽𝒶 𝓁𝒾𝓈𝓉𝒶 𝒹ℯ 𝒻𝒾𝓁𝓂ℯ𝓈</h2>
     
-    <input type="text" id="busca-filme" placeholder="🔍 Pesquisar filmes por título...">
+    <input type="text" id="busca-filme" placeholder="🔍 Pesquisar filmes por título na lista...">
 
     <div id="lista-filmes">
         <p id="mensagem-vazia">Nenhum filme cadastrado ainda.</p>
     </div>
 
     <script>
+        const OMDb_API_KEY = '4c42996f'; 
+
         // 1. ARMAZENAMENTO DE DADOS
         const catalogo = [];
 
-        // ------------------------------------
-        // FILME DE EXEMPLO ADICIONADO AQUI
-        // ------------------------------------
+        // Adiciona um filme de exemplo para iniciar
         catalogo.push({
             titulo: "Um Mistério de Cores",
-            imagemURL: "https://i.imgur.com/gK9u5lA.png", // Imagem de exemplo
+            imagemURL: "https://i.imgur.com/gK9u5lA.png", 
             sinopse: "Um detetive obcecado por cores deve desvendar a verdade por trás de um crime em que a única pista é uma mancha de cor primária em uma tela vazia.",
             diretor: "Ava Violeta",
-            duracao: 118, // 1h 58min
+            duracao: 118, 
             faixaEtaria: "14 anos",
             ano: 2024, 
             genero: "Suspense",
             nota: 8.5,
         });
-        
-        catalogo.push({
-            titulo: "A Viagem no Tempo",
-            imagemURL: "https://via.placeholder.com/100x150?text=Viagem", // Outra Imagem de exemplo
-            sinopse: "Cientistas descobrem a chave para viajar no tempo, mas a primeira missão tem consequências inesperadas para o futuro da humanidade.",
-            diretor: "Dr. Chronos",
-            duracao: 145,
-            faixaEtaria: "Livre",
-            ano: 2023, 
-            genero: "Ficção Científica",
-            nota: 9.2,
-        });
 
-
-        // 2. CAPTURA DE ELEMENTOS DO DOM (Input e Contêineres)
-        const form = document.getElementById('cadastro-filme');
+        // 2. CAPTURA DE ELEMENTOS DO DOM
         const listaFilmesContainer = document.getElementById('lista-filmes');
         const mensagemVazia = document.getElementById('mensagem-vazia');
-        
+        const inputBuscaLocal = document.getElementById('busca-filme');
+        const formManual = document.getElementById('cadastro-filme');
+
+        // Novos elementos para Busca API
+        const inputBuscaApi = document.getElementById('input-busca-api');
+        const btnBuscarApi = document.getElementById('btn-buscar-api');
+        const resultadoApi = document.getElementById('resultado-api');
+
+        // Captura dos inputs manuais (mantidos para o form.reset)
         const inputTitulo = document.getElementById('titulo');
         const inputSinopse = document.getElementById('sinopse');
         const inputAno = document.getElementById('ano');
         const selectGenero = document.getElementById('genero');
         const inputNota = document.getElementById('nota');
-        
         const inputDiretor = document.getElementById('diretor');
         const inputDuracao = document.getElementById('duracao');
         const selectFaixaEtaria = document.getElementById('faixa-etaria');
         const inputImagemURL = document.getElementById('imagem-url');
-        
-        // NOVO ELEMENTO: Input de Busca
-        const inputBusca = document.getElementById('busca-filme');
-
 
         // ------------------------------------
-        // FUNÇÃO AUXILIAR: GERAR ESTRELAS
+        // FUNÇÕES AUXILIARES
         // ------------------------------------
+
         function gerarEstrelas(nota) {
             const notaArredondada = Math.round(nota * 2) / 2;
             let estrelasHtml = '';
-            
             for (let i = 1; i <= 5; i++) {
                 if (i <= notaArredondada) {
                     estrelasHtml += '<span class="estrela cheia">★</span>';
@@ -205,46 +189,35 @@
                 }
             }
             estrelasHtml += `<span class="nota-valor"> (${nota.toFixed(1)}/10)</span>`;
-
             return estrelasHtml;
         }
 
-
-        // ------------------------------------
-        // FUNÇÃO DE REMOÇÃO (Otimizada)
-        // ------------------------------------
         function removerFilme(tituloRemover) {
-            // Encontra o índice do filme a ser removido pelo título
             const index = catalogo.findIndex(filme => filme.titulo === tituloRemover);
-            
             if (index !== -1) {
                 catalogo.splice(index, 1);
-                renderizarCatalogo(); // Rerenderiza a lista após a remoção
+                renderizarCatalogo();
             }
         }
 
-        // Função auxiliar para formatar minutos em H:MM
         function formatarDuracao(minutos) {
             const horas = Math.floor(minutos / 60);
             const mins = minutos % 60;
             return `${horas > 0 ? horas + 'h ' : ''}${mins > 0 ? mins + 'min' : (horas === 0 ? '0min' : '')}`.trim();
         }
-
+        
         // ------------------------------------
-        // FUNÇÃO DE RENDERIZAÇÃO (Desenha o HTML com estrelas)
-        // Adicionada lógica de filtro
+        // FUNÇÃO DE RENDERIZAÇÃO (Desenha o HTML)
         // ------------------------------------
         function renderizarCatalogo() {
             listaFilmesContainer.innerHTML = '';
             
-            // 1. Aplicar Filtro
-            const termoBusca = inputBusca.value.toLowerCase().trim();
+            const termoBusca = inputBuscaLocal.value.toLowerCase().trim();
             const filmesFiltrados = catalogo.filter(filme => 
                 filme.titulo.toLowerCase().includes(termoBusca)
             );
             
             if (filmesFiltrados.length === 0) {
-                // Exibe a mensagem de vazio ou de nenhum resultado encontrado
                 mensagemVazia.textContent = termoBusca ? 
                     `Nenhum filme encontrado com o título "${termoBusca}".` : 
                     "Nenhum filme cadastrado ainda.";
@@ -256,7 +229,6 @@
                 mensagemVazia.style.display = 'none';
             }
 
-            // 2. Renderizar a lista filtrada
             filmesFiltrados.forEach((filme) => {
                 const filmeCard = document.createElement('div');
                 filmeCard.classList.add('filme-card');
@@ -280,8 +252,6 @@
                 `;
                 
                 const btnRemover = filmeCard.querySelector('.btn-remover');
-                // Alterei o manipulador de remoção para usar o título, pois o índice 
-                // muda quando a lista é filtrada!
                 btnRemover.addEventListener('click', () => {
                     removerFilme(filme.titulo); 
                 });
@@ -289,19 +259,103 @@
                 listaFilmesContainer.appendChild(filmeCard);
             });
         }
+        
+        // ------------------------------------
+        // NOVO: FUNÇÃO DE BUSCA NA API OMDb
+        // ------------------------------------
+        async function buscarFilmeOMDb() {
+            const tituloBusca = inputBuscaApi.value.trim();
+            resultadoApi.textContent = ''; // Limpa mensagens anteriores
+            
+            if (!tituloBusca) {
+                resultadoApi.textContent = "Digite o título do filme.";
+                return;
+            }
+            
+            resultadoApi.textContent = "Buscando...";
+            btnBuscarApi.disabled = true;
+
+            try {
+                const url = `https://www.omdbapi.com/?t=${encodeURIComponent(tituloBusca)}&apikey=${OMDb_API_KEY}`;
+                const response = await fetch(url);
+                const dados = await response.json();
+
+                if (dados.Response === "True") {
+                    
+                    // Converte Duração (ex: "120 min" para 120)
+                    const duracaoMinutos = dados.Runtime.match(/\d+/) ? parseInt(dados.Runtime.match(/\d+/)[0]) : 0;
+
+                    // Mapeia a nota do IMDb (ex: "8.7/10" ou só "8.7")
+                    let notaOmdb = 0;
+                    if (dados.imdbRating && dados.imdbRating !== 'N/A') {
+                        notaOmdb = parseFloat(dados.imdbRating);
+                    } else if (dados.Ratings && dados.Ratings.length > 0) {
+                        // Tenta buscar de outras fontes se a IMDb Rating não estiver disponível
+                        const rating = dados.Ratings.find(r => r.Source.includes('Internet Movie Database') || r.Source.includes('Rotten Tomatoes'));
+                        if (rating) {
+                            // Converte de formato 'X/10' ou 'Y%' para escala 0-10
+                            if (rating.Value.includes('/10')) {
+                                notaOmdb = parseFloat(rating.Value.split('/')[0]);
+                            } else if (rating.Value.includes('%')) {
+                                notaOmdb = parseFloat(rating.Value.replace('%', '')) / 10;
+                            } else {
+                                notaOmdb = parseFloat(rating.Value);
+                            }
+                        }
+                    }
+
+                    // Mapeamento dos dados para o formato do seu catálogo
+                    const novoFilmeOmdb = {
+                        titulo: dados.Title,
+                        imagemURL: dados.Poster !== 'N/A' ? dados.Poster : 'https://via.placeholder.com/100x150?text=Sem+Poster', 
+                        sinopse: dados.Plot !== 'N/A' ? dados.Plot : 'Sinopse não disponível.',
+                        diretor: dados.Director !== 'N/A' ? dados.Director : 'Desconhecido',
+                        duracao: duracaoMinutos, 
+                        faixaEtaria: dados.Rated !== 'N/A' ? dados.Rated : 'Livre',
+                        ano: parseInt(dados.Year), 
+                        genero: dados.Genre.split(', ')[0] || 'Outro', // Pega o primeiro gênero
+                        nota: notaOmdb,
+                    };
+
+                    catalogo.push(novoFilmeOmdb);
+                    renderizarCatalogo();
+                    
+                    resultadoApi.textContent = `✅ Filme "${dados.Title}" adicionado com sucesso!`;
+                    inputBuscaApi.value = ''; // Limpa a caixa de busca
+                    
+                } else {
+                    resultadoApi.textContent = `❌ Filme não encontrado: ${dados.Error || 'Erro desconhecido.'}`;
+                }
+            } catch (error) {
+                console.error("Erro ao buscar filme na OMDb API:", error);
+                resultadoApi.textContent = "⚠️ Erro de conexão ou na API.";
+            } finally {
+                btnBuscarApi.disabled = false;
+            }
+        }
 
         // ------------------------------------
-        // EVENTO: BARRA DE PESQUISA (Filtra ao digitar)
+        // EVENT LISTENERS
         // ------------------------------------
-        inputBusca.addEventListener('input', renderizarCatalogo); 
+        
+        // 1. Busca Local (Filtro)
+        inputBuscaLocal.addEventListener('input', renderizarCatalogo); 
 
-        // ------------------------------------
-        // FUNÇÃO DE CADASTRO (Ao enviar o formulário)
-        // ------------------------------------
-        form.addEventListener('submit', function(event) {
+        // 2. Busca API (Botão)
+        btnBuscarApi.addEventListener('click', buscarFilmeOMDb);
+        
+        // 3. Busca API (Enter)
+        inputBuscaApi.addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Impede o envio do formulário padrão
+                buscarFilmeOMDb();
+            }
+        });
+
+        // 4. Cadastro Manual
+        formManual.addEventListener('submit', function(event) {
             event.preventDefault();
 
-            // Pega o texto visível das opções selecionadas
             const generoTexto = selectGenero.options[selectGenero.selectedIndex].text;
             const faixaEtariaTexto = selectFaixaEtaria.options[selectFaixaEtaria.selectedIndex].text;
 
@@ -318,10 +372,9 @@
             };
 
             catalogo.push(novoFilme);
-            // Limpa o filtro de busca ao adicionar um novo filme
-            inputBusca.value = ''; 
+            inputBuscaLocal.value = ''; 
             renderizarCatalogo();
-            form.reset();
+            formManual.reset();
             inputTitulo.focus(); 
         });
         
