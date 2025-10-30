@@ -260,7 +260,7 @@
         }
         
         // ------------------------------------
-        // NOVO: FUNÇÃO DE BUSCA NA API OMDb
+        // NOVO: FUNÇÃO DE BUSCA NA API OMDb (CORRIGIDA)
         // ------------------------------------
         async function buscarFilmeOMDb() {
             const tituloBusca = inputBuscaApi.value.trim();
@@ -275,7 +275,7 @@
             btnBuscarApi.disabled = true;
 
             try {
-                // Buscando por título (t=) para ter dados mais detalhados e específicos
+                // CORRIGIDO: Usando 't' para buscar por Título, em vez de 'i' (ID do IMDb)
                 const url = ` http://www.omdbapi.com/?t=${encodeURIComponent(tituloBusca)}&apikey=${OMDb_API_KEY}`;
                 const response = await fetch(url);
                 const dados = await response.json();
