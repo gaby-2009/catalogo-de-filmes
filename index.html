@@ -125,16 +125,10 @@
 
     <h2>ℳ𝒾𝓃𝒽𝒶 𝓁𝒾𝓈𝓉𝒶 𝒹ℯ 𝒻𝒾𝓁𝓂ℯ𝓈</h2>
     
-    <input type="text" id="busca-filme" placeholder="🔍 Pesquisar filmes por título na lista...">
-
-    <div id="lista-filmes">
-        <p id="mensagem-vazia">Nenhum filme cadastrado ainda.</p>
-    </div>
-
     <script>
         const OMDb_API_KEY = '4c42996f'; 
 
-        // 1. ARMAZENAMENTO DE DADOS
+        // ARMAZENAMENTO DE DADOS
         const catalogo = [];
 
         // Adiciona um filme de exemplo para iniciar
@@ -150,7 +144,7 @@
             nota: 8.5,
         });
 
-        // 2. CAPTURA DE ELEMENTOS DO DOM
+        // CAPTURA DE ELEMENTOS DO DOM
         const listaFilmesContainer = document.getElementById('lista-filmes');
         const mensagemVazia = document.getElementById('mensagem-vazia');
         const inputBuscaLocal = document.getElementById('busca-filme');
@@ -276,7 +270,7 @@
             btnBuscarApi.disabled = true;
 
             try {
-                const url = `https://www.omdbapi.com/?t=${encodeURIComponent(tituloBusca)}&apikey=${OMDb_API_KEY}`;
+                const url = ` http://www.omdbapi.com/?i=${encodeURIComponent(tituloBusca)}&apikey=${OMDb_API_KEY}`;
                 const response = await fetch(url);
                 const dados = await response.json();
 
@@ -338,13 +332,13 @@
         // EVENT LISTENERS
         // ------------------------------------
         
-        // 1. Busca Local (Filtro)
+        // Busca Local (Filtro)
         inputBuscaLocal.addEventListener('input', renderizarCatalogo); 
 
-        // 2. Busca API (Botão)
+        // Busca API (Botão)
         btnBuscarApi.addEventListener('click', buscarFilmeOMDb);
         
-        // 3. Busca API (Enter)
+        // Busca API (Enter)
         inputBuscaApi.addEventListener('keypress', (event) => {
             if (event.key === 'Enter') {
                 event.preventDefault(); // Impede o envio do formulário padrão
