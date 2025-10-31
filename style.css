@@ -227,3 +227,26 @@ h2 {
     cursor: pointer;
 }
 
+/* Adicione estes estilos dentro da tag <style> */
+        .btn-trailer {
+            display: inline-block;
+            padding: 8px 12px;
+            margin-right: 10px;
+            background-color: #ff0000; /* Vermelho YouTube */
+            color: white;
+            text-decoration: none;
+            border-radius: 4px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        .btn-trailer:hover {
+            background-color: #cc0000;
+        }
+        .btn-remover {
+            padding: 8px 12px;
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }

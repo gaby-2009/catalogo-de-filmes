@@ -101,218 +101,235 @@
     
     <script>
 
-        const OMDb_API_KEY = '4c42996f'; 
-        const catalogo = [];
+    const OMDb_API_KEY = '4c42996f'; 
+    const catalogo = [];
 
-        // Adiciona um filme de exemplo para iniciar
-        catalogo.push({
-            titulo: "Um Mistério de Cores",
-            imagemURL: "https://i.imgur.com/gK9u5lA.png", 
-            sinopse: "Um detetive obcecado por cores deve desvendar a verdade por trás de um crime em que a única pista é uma mancha de cor primária em uma tela vazia.",
-            diretor: "Ava Violeta",
-            duracao: 118, 
-            faixaEtaria: "14 anos",
-            ano: 2024, 
-            genero: "Suspense",
-            nota: 8.5,
-        });
+    // Adiciona um filme de exemplo para iniciar
+    catalogo.push({
+        titulo: "Um Mistério de Cores",
+        imagemURL: "https://i.imgur.com/gK9u5lA.png", 
+        sinopse: "Um detetive obcecado por cores deve desvendar a verdade por trás de um crime em que a única pista é uma mancha de cor primária em uma tela vazia.",
+        diretor: "Ava Violeta",
+        duracao: 118, 
+        faixaEtaria: "14 anos",
+        ano: 2024, 
+        genero: "Suspense",
+        nota: 8.5,
+        // NOVO CAMPO ADICIONADO para o trailer do filme de exemplo
+        trailerURL: 'https://www.youtube.com/results?search_query=Um+Misterio+de+Cores+trailer',
+    });
 
-        // CAPTURA DE ELEMENTOS DO DOM (Gerais)
-        const listaFilmesContainer = document.getElementById('lista-filmes');
-        const mensagemVazia = document.getElementById('mensagem-vazia');
-        const inputBuscaLocal = document.getElementById('busca-filme');
+    // CAPTURA DE ELEMENTOS DO DOM (Gerais)
+    const listaFilmesContainer = document.getElementById('lista-filmes');
+    const mensagemVazia = document.getElementById('mensagem-vazia');
+    const inputBuscaLocal = document.getElementById('busca-filme');
 
-        // CAPTURA DE ELEMENTOS DO DOM (Busca API)
-        const inputBuscaApi = document.getElementById('input-busca-api');
-        const btnBuscarApi = document.getElementById('btn-buscar-api');
-        const resultadoApi = document.getElementById('resultado-api');
+    // CAPTURA DE ELEMENTOS DO DOM (Busca API)
+    const inputBuscaApi = document.getElementById('input-busca-api');
+    const btnBuscarApi = document.getElementById('btn-buscar-api');
+    const resultadoApi = document.getElementById('resultado-api');
 
 
-        // ====================================
-        // II. FUNÇÕES AUXILIARES
-        // ====================================
+    // ====================================
+    // II. FUNÇÕES AUXILIARES
+    // ====================================
 
-        function gerarEstrelas(nota) {
-            const notaArredondada = Math.round(nota * 2) / 2;
-            let estrelasHtml = '';
-            for (let i = 1; i <= 5; i++) {
-                if (i <= notaArredondada) {
-                    estrelasHtml += '<span class="estrela cheia">★</span>';
-                } else if (i - 0.5 === notaArredondada) {
-                    estrelasHtml += '<span class="estrela metade">★</span>';
-                } else {
-                    estrelasHtml += '<span class="estrela vazia">★</span>';
-                }
-            }
-            estrelasHtml += `<span class="nota-valor"> (${nota.toFixed(1)}/10)</span>`;
-            return estrelasHtml;
-        }
-
-        function formatarDuracao(minutos) {
-            const horas = Math.floor(minutos / 60);
-            const mins = minutos % 60;
-            return `${horas > 0 ? horas + 'h ' : ''}${mins > 0 ? mins + 'min' : (horas === 0 ? '0min' : '')}`.trim();
-        }
-
-        function removerFilme(tituloRemover) {
-            const index = catalogo.findIndex(filme => filme.titulo === tituloRemover);
-            if (index !== -1) {
-                catalogo.splice(index, 1);
-                renderizarCatalogo();
-            }
-        }
-        
-        // FUNÇÃO DE RENDERIZAÇÃO (Desenha o HTML)
-        function renderizarCatalogo() {
-            listaFilmesContainer.innerHTML = '';
-            
-            const termoBusca = inputBuscaLocal.value.toLowerCase().trim();
-            const filmesFiltrados = catalogo.filter(filme => 
-                filme.titulo.toLowerCase().includes(termoBusca)
-            );
-            
-            if (filmesFiltrados.length === 0) {
-                mensagemVazia.textContent = termoBusca ? 
-                    `Nenhum filme encontrado com o título "${termoBusca}".` : 
-                    "Nenhum filme cadastrado ainda.";
-                    
-                listaFilmesContainer.appendChild(mensagemVazia);
-                mensagemVazia.style.display = 'block';
-                return;
+    function gerarEstrelas(nota) {
+        const notaArredondada = Math.round(nota * 2) / 2;
+        let estrelasHtml = '';
+        for (let i = 1; i <= 5; i++) {
+            if (i <= notaArredondada) {
+                estrelasHtml += '<span class="estrela cheia">★</span>';
+            } else if (i - 0.5 === notaArredondada) {
+                estrelasHtml += '<span class="estrela metade">★</span>';
             } else {
-                mensagemVazia.style.display = 'none';
+                estrelasHtml += '<span class="estrela vazia">★</span>';
             }
+        }
+        estrelasHtml += `<span class="nota-valor"> (${nota.toFixed(1)}/10)</span>`;
+        return estrelasHtml;
+    }
 
-            filmesFiltrados.forEach((filme) => {
-                const filmeCard = document.createElement('div');
-                filmeCard.classList.add('filme-card');
+    function formatarDuracao(minutos) {
+        const horas = Math.floor(minutos / 60);
+        const mins = minutos % 60;
+        return `${horas > 0 ? horas + 'h ' : ''}${mins > 0 ? mins + 'min' : (horas === 0 ? '0min' : '')}`.trim();
+    }
+
+    function removerFilme(tituloRemover) {
+        const index = catalogo.findIndex(filme => filme.titulo === tituloRemover);
+        if (index !== -1) {
+            catalogo.splice(index, 1);
+            renderizarCatalogo();
+        }
+    }
+    
+    // FUNÇÃO DE RENDERIZAÇÃO (Desenha o HTML)
+    function renderizarCatalogo() {
+        listaFilmesContainer.innerHTML = '';
+        
+        const termoBusca = inputBuscaLocal.value.toLowerCase().trim();
+        const filmesFiltrados = catalogo.filter(filme => 
+            filme.titulo.toLowerCase().includes(termoBusca)
+        );
+        
+        if (filmesFiltrados.length === 0) {
+            mensagemVazia.textContent = termoBusca ? 
+                `Nenhum filme encontrado com o título "${termoBusca}".` : 
+                "Nenhum filme cadastrado ainda.";
                 
-                const duracaoFormatada = formatarDuracao(filme.duracao);
-                const estrelasHtml = gerarEstrelas(filme.nota); 
-                
-                filmeCard.innerHTML = `
-                    <img src="${filme.imagemURL}" alt="Poster do filme ${filme.titulo}" class="filme-imagem">
-                    <div class="filme-info">
-                        <h3>${filme.titulo} (${filme.ano})</h3>
-                        <p><strong>Diretor:</strong> ${filme.diretor}</p>
-                        <p><strong>Gênero:</strong> ${filme.genero} | <strong>Faixa Etária:</strong> ${filme.faixaEtaria}</p>
-                        <p><strong>Duração:</strong> ${duracaoFormatada}</p>
-                        
-                        <p class="nota"><strong>Nota:</strong> ${estrelasHtml}</p>
-                        
-                        <p><strong>Sinopse:</strong> ${filme.sinopse}</p>
+            listaFilmesContainer.appendChild(mensagemVazia);
+            mensagemVazia.style.display = 'block';
+            return;
+        } else {
+            mensagemVazia.style.display = 'none';
+        }
+
+        filmesFiltrados.forEach((filme) => {
+            const filmeCard = document.createElement('div');
+            filmeCard.classList.add('filme-card');
+            
+            const duracaoFormatada = formatarDuracao(filme.duracao);
+            const estrelasHtml = gerarEstrelas(filme.nota); 
+            
+            // Adicionado o botão/link do trailer
+            const trailerButtonHtml = filme.trailerURL ? 
+                `<a href="${filme.trailerURL}" target="_blank" class="btn-trailer">▶️ Ver Trailer</a>` : 
+                '';
+
+            filmeCard.innerHTML = `
+                <img src="${filme.imagemURL}" alt="Poster do filme ${filme.titulo}" class="filme-imagem">
+                <div class="filme-info">
+                    <h3>${filme.titulo} (${filme.ano})</h3>
+                    <p><strong>Diretor:</strong> ${filme.diretor}</p>
+                    <p><strong>Gênero:</strong> ${filme.genero} | <strong>Faixa Etária:</strong> ${filme.faixaEtaria}</p>
+                    <p><strong>Duração:</strong> ${duracaoFormatada}</p>
+                    
+                    <p class="nota"><strong>Nota:</strong> ${estrelasHtml}</p>
+                    
+                    <p><strong>Sinopse:</strong> ${filme.sinopse}</p>
+                    
+                    <div style="margin-top: 10px;">
+                        ${trailerButtonHtml}
                         <button class="btn-remover">Remover</button>
                     </div>
-                `;
-                
-                const btnRemover = filmeCard.querySelector('.btn-remover');
-                btnRemover.addEventListener('click', () => {
-                    removerFilme(filme.titulo); 
-                });
-
-                listaFilmesContainer.appendChild(filmeCard);
+                </div>
+            `;
+            
+            const btnRemover = filmeCard.querySelector('.btn-remover');
+            btnRemover.addEventListener('click', () => {
+                removerFilme(filme.titulo); 
             });
-        }
 
-        // ====================================
-        // III. FUNÇÕES DE BUSCA API OMDb
-        // ====================================
-
-        async function buscarFilmeOMDb() {
-            const tituloBusca = inputBuscaApi.value.trim();
-            resultadoApi.textContent = ''; 
-            
-            if (!tituloBusca) {
-                resultadoApi.textContent = "Digite o título do filme.";
-                return;
-            }
-            
-            // Verifica se o filme já existe no catálogo local
-            if (catalogo.some(filme => filme.titulo.toLowerCase() === tituloBusca.toLowerCase())) {
-                resultadoApi.textContent = `⚠️ O filme "${tituloBusca}" já está na sua lista.`;
-                return;
-            }
-
-            resultadoApi.textContent = "Buscando...";
-            btnBuscarApi.disabled = true;
-
-            try {
-                const url = `https://www.omdbapi.com/?t=${encodeURIComponent(tituloBusca)}&apikey=${OMDb_API_KEY}`;
-                const response = await fetch(url);
-                const dados = await response.json();
-
-                if (dados.Response === "True") {
-                    
-                    const duracaoMinutos = dados.Runtime.match(/\d+/) ? parseInt(dados.Runtime.match(/\d+/)[0]) : 0;
-                    
-                    let notaOmdb = 0;
-                    if (dados.imdbRating && dados.imdbRating !== 'N/A') {
-                        notaOmdb = parseFloat(dados.imdbRating);
-                    } else if (dados.Ratings && dados.Ratings.length > 0) {
-                        const rating = dados.Ratings.find(r => r.Source.includes('Internet Movie Database'));
-                        if (rating) {
-                             // Tenta parsear a nota (geralmente X/10 ou X.X)
-                            notaOmdb = parseFloat(rating.Value.split('/')[0]) || parseFloat(rating.Value);
-                        }
-                    }
-
-                    // Mapeamento dos dados para o formato do seu catálogo
-                    const novoFilmeOmdb = {
-                        titulo: dados.Title,
-                        imagemURL: dados.Poster !== 'N/A' ? dados.Poster : 'https://via.placeholder.com/100x150?text=Sem+Poster', 
-                        sinopse: dados.Plot !== 'N/A' ? dados.Plot : 'Sinopse não disponível.',
-                        diretor: dados.Director !== 'N/A' ? dados.Director : 'Desconhecido',
-                        duracao: duracaoMinutos, 
-                        // Mapeia faixa etária do OMDb (ex: "PG-13", "R") para algo mais legível ou mantém
-                        faixaEtaria: dados.Rated !== 'N/A' ? dados.Rated : 'Livre', 
-                        ano: parseInt(dados.Year), 
-                        genero: dados.Genre.split(', ')[0] || 'Outro', 
-                        nota: notaOmdb,
-                    };
-
-                    catalogo.push(novoFilmeOmdb);
-                    renderizarCatalogo();
-                    
-                    resultadoApi.textContent = `✅ Filme "${dados.Title}" adicionado com sucesso!`;
-                    inputBuscaApi.value = ''; 
-                    
-                } else {
-                    resultadoApi.textContent = `❌ Filme não encontrado: ${dados.Error || 'Erro desconhecido.'}`;
-                }
-            } catch (error) {
-                console.error("Erro ao buscar filme na OMDb API:", error);
-                resultadoApi.textContent = "⚠️ Erro de conexão ou na API.";
-            } finally {
-                btnBuscarApi.disabled = false;
-            }
-        }
-       
-        
-        // ====================================
-        // V. EVENT LISTENERS
-        // ====================================
-        
-        // 1. Busca Local (Filtro)
-        inputBuscaLocal.addEventListener('input', renderizarCatalogo); 
-
-        // 2. Busca API (Botão e Enter)
-        btnBuscarApi.addEventListener('click', buscarFilmeOMDb);
-        inputBuscaApi.addEventListener('keypress', (event) => {
-            if (event.key === 'Enter') {
-                event.preventDefault(); 
-                buscarFilmeOMDb();
-            }
+            listaFilmesContainer.appendChild(filmeCard);
         });
+    }
 
-        // 3. Cadastro Manual (Usando a função separada)
-        formManual.addEventListener('submit', handleCadastroManual);
+    // ====================================
+    // III. FUNÇÕES DE BUSCA API OMDb
+    // ====================================
+
+    async function buscarFilmeOMDb() {
+        const tituloBusca = inputBuscaApi.value.trim();
+        resultadoApi.textContent = ''; 
         
-        // ====================================
-        // VI. RENDERIZAÇÃO INICIAL
-        // ====================================
+        if (!tituloBusca) {
+            resultadoApi.textContent = "Digite o título do filme.";
+            return;
+        }
         
-        renderizarCatalogo();
-    </script>
+        // Verifica se o filme já existe no catálogo local
+        if (catalogo.some(filme => filme.titulo.toLowerCase() === tituloBusca.toLowerCase())) {
+            resultadoApi.textContent = `⚠️ O filme "${tituloBusca}" já está na sua lista.`;
+            return;
+        }
+
+        resultadoApi.textContent = "Buscando...";
+        btnBuscarApi.disabled = true;
+
+        try {
+            const url = `https://www.omdbapi.com/?t=${encodeURIComponent(tituloBusca)}&apikey=${OMDb_API_KEY}`;
+            const response = await fetch(url);
+            const dados = await response.json();
+
+            if (dados.Response === "True") {
+                
+                const duracaoMinutos = dados.Runtime.match(/\d+/) ? parseInt(dados.Runtime.match(/\d+/)[0]) : 0;
+                
+                let notaOmdb = 0;
+                if (dados.imdbRating && dados.imdbRating !== 'N/A') {
+                    notaOmdb = parseFloat(dados.imdbRating);
+                } else if (dados.Ratings && dados.Ratings.length > 0) {
+                    const rating = dados.Ratings.find(r => r.Source.includes('Internet Movie Database'));
+                    if (rating) {
+                            // Tenta parsear a nota (geralmente X/10 ou X.X)
+                        notaOmdb = parseFloat(rating.Value.split('/')[0]) || parseFloat(rating.Value);
+                    }
+                }
+
+                // Cria o link de busca do YouTube para o trailer
+                const trailerLink = `https://www.youtube.com/results?search_query=${encodeURIComponent(dados.Title + ' official trailer')}`;
+
+
+                // Mapeamento dos dados para o formato do seu catálogo
+                const novoFilmeOmdb = {
+                    titulo: dados.Title,
+                    imagemURL: dados.Poster !== 'N/A' ? dados.Poster : 'https://via.placeholder.com/100x150?text=Sem+Poster', 
+                    sinopse: dados.Plot !== 'N/A' ? dados.Plot : 'Sinopse não disponível.',
+                    diretor: dados.Director !== 'N/A' ? dados.Director : 'Desconhecido',
+                    duracao: duracaoMinutos, 
+                    // Mapeia faixa etária do OMDb (ex: "PG-13", "R") para algo mais legível ou mantém
+                    faixaEtaria: dados.Rated !== 'N/A' ? dados.Rated : 'Livre', 
+                    ano: parseInt(dados.Year), 
+                    genero: dados.Genre.split(', ')[0] || 'Outro', 
+                    nota: notaOmdb,
+                    // NOVO CAMPO: Adiciona o link do trailer
+                    trailerURL: trailerLink,
+                };
+
+                catalogo.push(novoFilmeOmdb);
+                renderizarCatalogo();
+                
+                resultadoApi.textContent = `✅ Filme "${dados.Title}" adicionado com sucesso!`;
+                inputBuscaApi.value = ''; 
+                
+            } else {
+                resultadoApi.textContent = `❌ Filme não encontrado: ${dados.Error || 'Erro desconhecido.'}`;
+            }
+        } catch (error) {
+            console.error("Erro ao buscar filme na OMDb API:", error);
+            resultadoApi.textContent = "⚠️ Erro de conexão ou na API.";
+        } finally {
+            btnBuscarApi.disabled = false;
+        }
+    }
+    
+    
+    // ====================================
+    // V. EVENT LISTENERS
+    // ====================================
+    
+    // 1. Busca Local (Filtro)
+    inputBuscaLocal.addEventListener('input', renderizarCatalogo); 
+
+    // 2. Busca API (Botão e Enter)
+    btnBuscarApi.addEventListener('click', buscarFilmeOMDb);
+    inputBuscaApi.addEventListener('keypress', (event) => {
+        if (event.key === 'Enter') {
+            event.preventDefault(); 
+            buscarFilmeOMDb();
+        }
+    });
+
+    // Removido listener do formManual (não existe no HTML fornecido)
+    // formManual.addEventListener('submit', handleCadastroManual);
+    
+    // ====================================
+    // VI. RENDERIZAÇÃO INICIAL
+    // ====================================
+    
+    renderizarCatalogo();
+</script>
 
     <div class="link-container">
     <a href="manual.html">Ir para a Próxima Página</a>
