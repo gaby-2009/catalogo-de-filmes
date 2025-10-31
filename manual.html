@@ -1,0 +1,103 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css"> 
+ </head>
+ <body>
+
+    <form id="cadastro-filme">
+        <h2>Adicionar Novo Filme (Manual)</h2>
+        <div><label for="titulo">Título do Filme:</label><input type="text" id="titulo" required></div>
+        <div><label for="imagem-url">Imagem do Filme (URL):</label><input type="url" id="imagem-url" placeholder="Cole o link da imagem (URL)" required></div>
+        <div><label for="sinopse">Sinopse:</label><textarea id="sinopse" required></textarea></div>
+        <div><label for="diretor">Diretor:</label><input type="text" id="diretor" required></div>
+        <div><label for="duracao">Duração (minutos):</label><input type="number" id="duracao" min="1" required></div>
+        <div>
+            <label for="faixa-etaria">Faixa Etária:</label>
+            <select id="faixa-etaria" required>
+                <option value="">-- Selecione a Faixa --</option>
+                <option value="Livre">Livre</option><option value="10">10 anos</option><option value="12">12 anos</option>
+                <option value="14">14 anos</option><option value="16">16 anos</option><option value="18">18 anos</option>
+            </select>
+        </div>
+        <div><label for="ano">Ano de Lançamento:</label><input type="number" id="ano" min="1888" max="2099" required></div>
+        <div>
+            <label for="genero">Gênero:</label>
+            <select id="genero" required>
+                <option value="">-- Selecione o Gênero --</option>
+                <option value="Acao">Ação</option><option value="Comedia">Comédia</option><option value="Drama">Drama</option>
+                <option value="Ficcao">Ficção Científica</option><option value="Terror">Terror</option>
+                <option value="Documentario">Documentário</option><option value="Outro">Outro</option>
+            </select>
+        </div>
+        <div><label for="nota">Nota (0 a 10):</label><input type="number" id="nota" min="0" max="10" step="0.1" required></div>
+        <button type="submit">Adicionar Filme</button>
+    </form>
+
+    <script>
+    // ====================================
+    // IV. FUNÇÃO DE CADASTRO MANUAL (SEPARADA)
+    // ====================================
+    
+    // Captura dos elementos do Formulário Manual
+    const formManual = document.getElementById('cadastro-filme');
+    const inputTitulo = document.getElementById('titulo');
+    const inputSinopse = document.getElementById('sinopse');
+    const inputAno = document.getElementById('ano');
+    const selectGenero = document.getElementById('genero');
+    const inputNota = document.getElementById('nota');
+    const inputDiretor = document.getElementById('diretor');
+    const inputDuracao = document.getElementById('duracao');
+    const selectFaixaEtaria = document.getElementById('faixa-etaria');
+    const inputImagemURL = document.getElementById('imagem-url');
+
+    /**
+     * Trata a submissão do formulário de cadastro manual, adicionando o filme.
+     * Inclui validação para evitar duplicidade.
+     */
+    function handleCadastroManual(event) {
+        event.preventDefault();
+
+        const tituloNovo = inputTitulo.value.trim();
+        
+        // VALIDAÇÃO: verifica se o filme já existe
+        if (catalogo.some(filme => filme.titulo.toLowerCase() === tituloNovo.toLowerCase())) {
+            alert(`O filme "${tituloNovo}" já está na sua lista. Adicione um nome único ou busque pelo título exato.`);
+            return; 
+        }
+
+        const generoTexto = selectGenero.options[selectGenero.selectedIndex].text;
+        const faixaEtariaTexto = selectFaixaEtaria.options[selectFaixaEtaria.selectedIndex].text;
+
+        const novoFilme = {
+            titulo: tituloNovo,
+            imagemURL: inputImagemURL.value, 
+            sinopse: inputSinopse.value,
+            diretor: inputDiretor.value,
+            duracao: Number(inputDuracao.value),
+            faixaEtaria: faixaEtariaTexto,
+            ano: Number(inputAno.value), 
+            genero: generoTexto,
+            nota: Number(inputNota.value),
+        };
+
+        catalogo.push(novoFilme);
+        inputBuscaLocal.value = ''; 
+        renderizarCatalogo();
+        formManual.reset();
+        inputTitulo.focus(); 
+        
+        alert(`Filme "${tituloNovo}" adicionado manualmente com sucesso!`);
+    }
+    </script>
+
+    <div class="link-container">
+        <a href="indedx.html">Voltar para Página</a>
+    </div>
+
+ </body>
+ </html>
+       

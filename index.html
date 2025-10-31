@@ -97,43 +97,11 @@
     <div id="lista-filmes">
         <p id="mensagem-vazia" style="display: none;"></p>
     </div>
-
     <hr>
     
-    <form id="cadastro-filme">
-        <h2>Adicionar Novo Filme (Manual)</h2>
-        <div><label for="titulo">Título do Filme:</label><input type="text" id="titulo" required></div>
-        <div><label for="imagem-url">Imagem do Filme (URL):</label><input type="url" id="imagem-url" placeholder="Cole o link da imagem (URL)" required></div>
-        <div><label for="sinopse">Sinopse:</label><textarea id="sinopse" required></textarea></div>
-        <div><label for="diretor">Diretor:</label><input type="text" id="diretor" required></div>
-        <div><label for="duracao">Duração (minutos):</label><input type="number" id="duracao" min="1" required></div>
-        <div>
-            <label for="faixa-etaria">Faixa Etária:</label>
-            <select id="faixa-etaria" required>
-                <option value="">-- Selecione a Faixa --</option>
-                <option value="Livre">Livre</option><option value="10">10 anos</option><option value="12">12 anos</option>
-                <option value="14">14 anos</option><option value="16">16 anos</option><option value="18">18 anos</option>
-            </select>
-        </div>
-        <div><label for="ano">Ano de Lançamento:</label><input type="number" id="ano" min="1888" max="2099" required></div>
-        <div>
-            <label for="genero">Gênero:</label>
-            <select id="genero" required>
-                <option value="">-- Selecione o Gênero --</option>
-                <option value="Acao">Ação</option><option value="Comedia">Comédia</option><option value="Drama">Drama</option>
-                <option value="Ficcao">Ficção Científica</option><option value="Terror">Terror</option>
-                <option value="Documentario">Documentário</option><option value="Outro">Outro</option>
-            </select>
-        </div>
-        <div><label for="nota">Nota (0 a 10):</label><input type="number" id="nota" min="0" max="10" step="0.1" required></div>
-        <button type="submit">Adicionar Filme</button>
-    </form>
-     
-    
     <script>
-        const OMDb_API_KEY = '4c42996f'; 
 
-        // ARMAZENAMENTO DE DADOS
+        const OMDb_API_KEY = '4c42996f'; 
         const catalogo = [];
 
         // Adiciona um filme de exemplo para iniciar
@@ -149,31 +117,20 @@
             nota: 8.5,
         });
 
-        // CAPTURA DE ELEMENTOS DO DOM
+        // CAPTURA DE ELEMENTOS DO DOM (Gerais)
         const listaFilmesContainer = document.getElementById('lista-filmes');
         const mensagemVazia = document.getElementById('mensagem-vazia');
         const inputBuscaLocal = document.getElementById('busca-filme');
-        const formManual = document.getElementById('cadastro-filme');
 
-        // Novos elementos para Busca API
+        // CAPTURA DE ELEMENTOS DO DOM (Busca API)
         const inputBuscaApi = document.getElementById('input-busca-api');
         const btnBuscarApi = document.getElementById('btn-buscar-api');
         const resultadoApi = document.getElementById('resultado-api');
 
-        // Captura dos inputs manuais (mantidos para o form.reset)
-        const inputTitulo = document.getElementById('titulo');
-        const inputSinopse = document.getElementById('sinopse');
-        const inputAno = document.getElementById('ano');
-        const selectGenero = document.getElementById('genero');
-        const inputNota = document.getElementById('nota');
-        const inputDiretor = document.getElementById('diretor');
-        const inputDuracao = document.getElementById('duracao');
-        const selectFaixaEtaria = document.getElementById('faixa-etaria');
-        const inputImagemURL = document.getElementById('imagem-url');
 
-        // ------------------------------------
-        // FUNÇÕES AUXILIARES
-        // ------------------------------------
+        // ====================================
+        // II. FUNÇÕES AUXILIARES
+        // ====================================
 
         function gerarEstrelas(nota) {
             const notaArredondada = Math.round(nota * 2) / 2;
@@ -191,6 +148,12 @@
             return estrelasHtml;
         }
 
+        function formatarDuracao(minutos) {
+            const horas = Math.floor(minutos / 60);
+            const mins = minutos % 60;
+            return `${horas > 0 ? horas + 'h ' : ''}${mins > 0 ? mins + 'min' : (horas === 0 ? '0min' : '')}`.trim();
+        }
+
         function removerFilme(tituloRemover) {
             const index = catalogo.findIndex(filme => filme.titulo === tituloRemover);
             if (index !== -1) {
@@ -198,16 +161,8 @@
                 renderizarCatalogo();
             }
         }
-
-        function formatarDuracao(minutos) {
-            const horas = Math.floor(minutos / 60);
-            const mins = minutos % 60;
-            return `${horas > 0 ? horas + 'h ' : ''}${mins > 0 ? mins + 'min' : (horas === 0 ? '0min' : '')}`.trim();
-        }
         
-        // ------------------------------------
         // FUNÇÃO DE RENDERIZAÇÃO (Desenha o HTML)
-        // ------------------------------------
         function renderizarCatalogo() {
             listaFilmesContainer.innerHTML = '';
             
@@ -258,127 +213,110 @@
                 listaFilmesContainer.appendChild(filmeCard);
             });
         }
-        
-        // ------------------------------------
-        // ------------------------------------
-// NOVO: FUNÇÃO DE BUSCA NA API OMDb (CORRIGIDA)
-// ------------------------------------
-async function buscarFilmeOMDb() {
-    const tituloBusca = inputBuscaApi.value.trim();
-    resultadoApi.textContent = ''; // Limpa mensagens anteriores
-    
-    if (!tituloBusca) {
-        resultadoApi.textContent = "Digite o título do filme.";
-        return;
-    }
-    
-    resultadoApi.textContent = "Buscando...";
-    btnBuscarApi.disabled = true;
 
-    try {
-        const url = `https://www.omdbapi.com/?t=${encodeURIComponent(tituloBusca)}&apikey=${OMDb_API_KEY}`;
-        const response = await fetch(url);
-        const dados = await response.json();
+        // ====================================
+        // III. FUNÇÕES DE BUSCA API OMDb
+        // ====================================
 
-        if (dados.Response === "True") {
+        async function buscarFilmeOMDb() {
+            const tituloBusca = inputBuscaApi.value.trim();
+            resultadoApi.textContent = ''; 
             
-            // Converte Duração (ex: "120 min" para 120)
-            const duracaoMinutos = dados.Runtime.match(/\d+/) ? parseInt(dados.Runtime.match(/\d+/)[0]) : 0;
-
-            // Mapeia a nota do IMDb (ex: "8.7/10" ou só "8.7")
-            let notaOmdb = 0;
-            if (dados.imdbRating && dados.imdbRating !== 'N/A') {
-                notaOmdb = parseFloat(dados.imdbRating);
-            } else if (dados.Ratings && dados.Ratings.length > 0) {
-                // Tenta buscar de outras fontes se a IMDb Rating não estiver disponível
-                const rating = dados.Ratings.find(r => r.Source.includes('Internet Movie Database') || r.Source.includes('Rotten Tomatoes'));
-                if (rating) {
-                    // Converte de formato 'X/10' ou 'Y%' para escala 0-10
-                    if (rating.Value.includes('/10')) {
-                        notaOmdb = parseFloat(rating.Value.split('/')[0]);
-                    } else if (rating.Value.includes('%')) {
-                        notaOmdb = parseFloat(rating.Value.replace('%', '')) / 10;
-                    } else {
-                        notaOmdb = parseFloat(rating.Value);
-                    }
-                }
+            if (!tituloBusca) {
+                resultadoApi.textContent = "Digite o título do filme.";
+                return;
+            }
+            
+            // Verifica se o filme já existe no catálogo local
+            if (catalogo.some(filme => filme.titulo.toLowerCase() === tituloBusca.toLowerCase())) {
+                resultadoApi.textContent = `⚠️ O filme "${tituloBusca}" já está na sua lista.`;
+                return;
             }
 
-            // Mapeamento dos dados para o formato do seu catálogo
-            const novoFilmeOmdb = {
-                titulo: dados.Title,
-                imagemURL: dados.Poster !== 'N/A' ? dados.Poster : 'https://via.placeholder.com/100x150?text=Sem+Poster', 
-                sinopse: dados.Plot !== 'N/A' ? dados.Plot : 'Sinopse não disponível.',
-                diretor: dados.Director !== 'N/A' ? dados.Director : 'Desconhecido',
-                duracao: duracaoMinutos, 
-                faixaEtaria: dados.Rated !== 'N/A' ? dados.Rated : 'Livre',
-                ano: parseInt(dados.Year), 
-                genero: dados.Genre.split(', ')[0] || 'Outro', // Pega o primeiro gênero
-                nota: notaOmdb,
-            };
+            resultadoApi.textContent = "Buscando...";
+            btnBuscarApi.disabled = true;
 
-            catalogo.push(novoFilmeOmdb);
-            renderizarCatalogo();
-            
-            resultadoApi.textContent = `✅ Filme "${dados.Title}" adicionado com sucesso!`;
-            inputBuscaApi.value = ''; // Limpa a caixa de busca
-            
-        } else {
-            resultadoApi.textContent = `❌ Filme não encontrado: ${dados.Error || 'Erro desconhecido.'}`;
+            try {
+                const url = `https://www.omdbapi.com/?t=${encodeURIComponent(tituloBusca)}&apikey=${OMDb_API_KEY}`;
+                const response = await fetch(url);
+                const dados = await response.json();
+
+                if (dados.Response === "True") {
+                    
+                    const duracaoMinutos = dados.Runtime.match(/\d+/) ? parseInt(dados.Runtime.match(/\d+/)[0]) : 0;
+                    
+                    let notaOmdb = 0;
+                    if (dados.imdbRating && dados.imdbRating !== 'N/A') {
+                        notaOmdb = parseFloat(dados.imdbRating);
+                    } else if (dados.Ratings && dados.Ratings.length > 0) {
+                        const rating = dados.Ratings.find(r => r.Source.includes('Internet Movie Database'));
+                        if (rating) {
+                             // Tenta parsear a nota (geralmente X/10 ou X.X)
+                            notaOmdb = parseFloat(rating.Value.split('/')[0]) || parseFloat(rating.Value);
+                        }
+                    }
+
+                    // Mapeamento dos dados para o formato do seu catálogo
+                    const novoFilmeOmdb = {
+                        titulo: dados.Title,
+                        imagemURL: dados.Poster !== 'N/A' ? dados.Poster : 'https://via.placeholder.com/100x150?text=Sem+Poster', 
+                        sinopse: dados.Plot !== 'N/A' ? dados.Plot : 'Sinopse não disponível.',
+                        diretor: dados.Director !== 'N/A' ? dados.Director : 'Desconhecido',
+                        duracao: duracaoMinutos, 
+                        // Mapeia faixa etária do OMDb (ex: "PG-13", "R") para algo mais legível ou mantém
+                        faixaEtaria: dados.Rated !== 'N/A' ? dados.Rated : 'Livre', 
+                        ano: parseInt(dados.Year), 
+                        genero: dados.Genre.split(', ')[0] || 'Outro', 
+                        nota: notaOmdb,
+                    };
+
+                    catalogo.push(novoFilmeOmdb);
+                    renderizarCatalogo();
+                    
+                    resultadoApi.textContent = `✅ Filme "${dados.Title}" adicionado com sucesso!`;
+                    inputBuscaApi.value = ''; 
+                    
+                } else {
+                    resultadoApi.textContent = `❌ Filme não encontrado: ${dados.Error || 'Erro desconhecido.'}`;
+                }
+            } catch (error) {
+                console.error("Erro ao buscar filme na OMDb API:", error);
+                resultadoApi.textContent = "⚠️ Erro de conexão ou na API.";
+            } finally {
+                btnBuscarApi.disabled = false;
+            }
         }
-    } catch (error) {
-        console.error("Erro ao buscar filme na OMDb API:", error);
-        resultadoApi.textContent = "⚠️ Erro de conexão ou na API.";
-    } finally {
-        btnBuscarApi.disabled = false;
-    }
-}
-        // ------------------------------------
-        // EVENT LISTENERS
-        // ------------------------------------
+       
         
-        // Busca Local (Filtro)
+        // ====================================
+        // V. EVENT LISTENERS
+        // ====================================
+        
+        // 1. Busca Local (Filtro)
         inputBuscaLocal.addEventListener('input', renderizarCatalogo); 
 
-        // Busca API (Botão)
+        // 2. Busca API (Botão e Enter)
         btnBuscarApi.addEventListener('click', buscarFilmeOMDb);
-        
-        // Busca API (Enter)
         inputBuscaApi.addEventListener('keypress', (event) => {
             if (event.key === 'Enter') {
-                event.preventDefault(); // Impede o envio do formulário padrão
+                event.preventDefault(); 
                 buscarFilmeOMDb();
             }
         });
 
-        // 4. Cadastro Manual
-        formManual.addEventListener('submit', function(event) {
-            event.preventDefault();
-
-            const generoTexto = selectGenero.options[selectGenero.selectedIndex].text;
-            const faixaEtariaTexto = selectFaixaEtaria.options[selectFaixaEtaria.selectedIndex].text;
-
-            const novoFilme = {
-                titulo: inputTitulo.value,
-                imagemURL: inputImagemURL.value, 
-                sinopse: inputSinopse.value,
-                diretor: inputDiretor.value,
-                duracao: Number(inputDuracao.value),
-                faixaEtaria: faixaEtariaTexto,
-                ano: Number(inputAno.value), 
-                genero: generoTexto,
-                nota: Number(inputNota.value),
-            };
-
-            catalogo.push(novoFilme);
-            inputBuscaLocal.value = ''; 
-            renderizarCatalogo();
-            formManual.reset();
-            inputTitulo.focus(); 
-        });
+        // 3. Cadastro Manual (Usando a função separada)
+        formManual.addEventListener('submit', handleCadastroManual);
         
-        // RENDERIZAÇÃO INICIAL
+        // ====================================
+        // VI. RENDERIZAÇÃO INICIAL
+        // ====================================
+        
         renderizarCatalogo();
     </script>
+
+    <div class="link-container">
+    <a href="manual.html">Ir para a Próxima Página</a>
+</div>
+
 </body>
 </html>
