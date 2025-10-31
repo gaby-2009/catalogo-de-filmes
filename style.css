@@ -202,3 +202,28 @@ h2 {
         max-width: 80%;
     }
 }
+
+
+/* Estilo para o retângulo roxo que envolve o link */
+.link-container {
+    background-color: #9933cc; /* Um tom de roxo vibrante */
+    padding: 15px 25px;       /* Espaço interno ao redor do link */
+    border-radius: 8px;       /* Bordas arredondadas */
+    display: inline-block;    /* Para que o retângulo se ajuste ao tamanho do conteúdo */
+    margin: 20px 0;           /* Espaçamento acima e abaixo */
+}
+
+/* Estilo para o texto do link dentro do retângulo */
+.link-container a {
+    color: white;             /* Cor do texto branca para contraste */
+    text-decoration: none;    /* Remove o sublinhado padrão dos links */
+    font-weight: bold;        /* Deixa o texto em negrito */
+    font-size: 1.1em;         /* Aumenta o tamanho da fonte */
+}
+
+/* Opcional: Efeito ao passar o mouse */
+.link-container:hover {
+    background-color: #7a29a3; /* Roxo um pouco mais escuro ao interagir */
+    cursor: pointer;
+}
+
