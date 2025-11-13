@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo de Filmes - FILMFLIX</title>
+    <title>Catálogo de Filmes - VitrineLab (Simulação)</title>
     
     <style>
-        /* CSS GLOBAL E VARIÁVEIS PARA TEMA ESCURO */
+        /* CSS GLOBAL E VARIÁVEIS PARA TEMA ESCURO (Minimalista) */
         *,
         *::before,
         *::after {
@@ -14,16 +14,13 @@
         }
 
         :root {
-            --cor-fundo-site: #1a1a1a; 
-            --cor-fundo-header: #222222; 
+            --cor-fundo-site: #000000; /* Preto Total */
+            --cor-fundo-header: #000000; 
             --cor-texto: #ffffff; 
-            --cor-primaria: #03a9f4; /* Azul/Ciano (Destaque principal) */
-            --cor-secundaria: #ff0077; /* Rosa Vibrante (Destaque secundário/Nota) */
+            --cor-primaria: #03a9f4; 
+            --cor-secundaria: #ff0077; 
             --cor-borda: #444444;
-            --cor-input-bg: #333;
-            
-            --cor-erro: #e74c3c; 
-            --cor-erro-hover: #c0392b;
+            --cor-input-bg: #1a1a1a; /* Fundo do input levemente cinza escuro */
         }
 
         body {
@@ -34,7 +31,7 @@
         }
         
         /* ------------------------------------
-        * Estilos do HEADER (Simulação da barra FILMFLIX)
+        * Estilos do HEADER (Barra de Navegação)
         * ------------------------------------
         */
         header {
@@ -43,108 +40,121 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
-            margin-bottom: 20px;
+            border-bottom: 1px solid #333;
         }
 
         .logo {
-            font-size: 2em;
-            font-weight: bold;
-            color: var(--cor-primaria);
-            letter-spacing: -1px;
+            font-size: 1.5em;
+            font-weight: 300;
+            color: var(--cor-texto);
+            display: flex;
+            align-items: center;
+        }
+        .logo span {
+            font-size: 0.7em;
+            font-weight: 600;
+            margin-left: 5px;
         }
 
+        .nav-links {
+            flex-grow: 1;
+            margin-left: 50px;
+        }
         .nav-links a {
             color: var(--cor-texto);
             text-decoration: none;
-            margin-left: 20px;
-            font-size: 1.1em;
+            margin-right: 25px;
+            font-size: 1em;
             transition: color 0.3s;
         }
-
         .nav-links a:hover {
-            color: var(--cor-secundaria);
-        }
-
-        h2 {
             color: var(--cor-primaria);
-            border-bottom: none;
-            padding-bottom: 0;
-            margin-top: 0;
-            font-size: 1.5em;
         }
-
-        hr {
-            border: 0;
-            border-top: 1px solid var(--cor-borda);
-            margin: 0 40px 20px 40px;
-        }
-
+        
         /* -------------------------------------- */
-        /* ESTILOS DA BUSCA API E BUSCA LOCAL/FILTROS */
+        /* SEÇÃO DE BUSCA E FILTROS (Centralizada) */
         /* -------------------------------------- */
-
         #busca-api-container {
-            background-color: var(--cor-fundo-header);
-            padding: 20px 40px;
+            padding: 80px 40px;
+            text-align: center;
         }
 
-        #busca-api-container input[type="text"],
-        #busca-api-container button {
-            padding: 10px 15px;
-            border-radius: 6px;
-            font-size: 16px;
+        h2.main-title {
+            color: var(--cor-texto);
+            font-size: 2.2em;
+            font-weight: 300;
+            margin-bottom: 30px;
+            text-transform: uppercase;
         }
 
+        /* Barra de Busca Grande e Centralizada */
         #input-busca-api {
-            width: 70%;
-            margin-right: 10px;
+            width: 80%;
+            max-width: 800px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
             border: 1px solid var(--cor-borda);
             background-color: var(--cor-input-bg);
             color: var(--cor-texto);
+            border-radius: 4px;
+            font-size: 1.2em;
         }
         
+        /* Botão de Busca (Oculto no layout minimalista) */
         #btn-buscar-api {
-            background-color: var(--cor-secundaria); /* Rosa Vibrante */
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
+            display: none; 
         }
-        #btn-buscar-api:hover {
-            background-color: #ff3399;
-        }
-        
+
         #resultado-api {
-            margin-top: 10px;
+            margin-top: 20px;
             font-weight: bold;
             color: var(--cor-primaria);
         }
 
-        .catalogo-header {
+        /* Container dos Filtros Abaixo da Barra */
+        .filtro-avancado-container {
             display: flex;
-            gap: 15px;
-            padding: 20px 40px;
-            background-color: var(--cor-fundo-header);
-            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 20px;
         }
-
-        #busca-filme,
-        .filtro-dropdown {
-            padding: 10px 15px;
-            border: 1px solid var(--cor-borda);
-            border-radius: 6px;
-            font-size: 16px;
-            background-color: var(--cor-input-bg);
-            color: white;
+        .filtro-grupo {
+            text-align: left;
+            padding-right: 20px;
+            border-right: 1px solid var(--cor-borda);
         }
-
-        #busca-filme {
-            flex-grow: 1; 
+        .filtro-grupo:last-child {
+            border-right: none;
         }
         
+        /* Estilo dos Dropdowns e Checkboxes */
+        .filtro-grupo label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #ccc;
+            cursor: pointer;
+        }
+
+        .filtro-dropdown {
+            padding: 8px 15px;
+            border: 1px solid var(--cor-borda);
+            border-radius: 4px;
+            background-color: var(--cor-input-bg);
+            color: white;
+            appearance: none; /* Remove estilo padrão do SO */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            cursor: pointer;
+        }
+        
+        /* Oculta o filtro de texto local (Não faz sentido neste layout) */
+        #busca-filme {
+            display: none !important;
+        }
+
         /* -------------------------------------- */
-        /* ESTILOS DA LISTA DE FILMES (GRADE/GRID) */
+        /* ESTILOS DA GRADE DE FILMES */
         /* -------------------------------------- */
         #lista-filmes {
             margin: 20px 40px; 
@@ -162,21 +172,21 @@
             box-shadow: 0 4px 8px rgba(0,0,0,0.3); 
             overflow: hidden; 
             text-align: left;
-            background-color: var(--cor-fundo-header); 
+            background-color: var(--cor-input-bg); 
             position: relative; 
             transition: transform 0.2s;
+            cursor: pointer;
         }
 
         .filme-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
         }
 
         .filme-imagem {
             width: 100%; 
             height: 300px; 
             object-fit: cover;
-            margin-right: 0;
             border-radius: 0;
         }
 
@@ -194,22 +204,17 @@
             height: 1.5em; 
         }
 
-        .filme-info p {
+        /* Oculta detalhes e botões */
+        .filme-info p, .btn-remover, .btn-trailer {
             display: none !important; 
         }
-
-        .btn-remover, .btn-trailer {
-            display: none !important;
-        }
         
-        /* -------------------------------------- */
-        /* NOTA SOBREPOSTA (Como no mockup 6.8) */
-        /* -------------------------------------- */
+        /* NOTA SOBREPOSTA (Como no mockup) */
         .nota-sobreposta {
             position: absolute;
             top: 15px;
             right: 15px;
-            background-color: var(--cor-fundo-header);
+            background-color: var(--cor-input-bg);
             color: var(--cor-secundaria); 
             padding: 5px 10px;
             border-radius: 4px;
@@ -219,80 +224,118 @@
             box-shadow: 0 0 5px rgba(0,0,0,0.5);
             border: 1px solid var(--cor-secundaria);
         }
+
+        #mensagem-vazia {
+            color: #999;
+            grid-column: 1 / -1; /* Ocupa toda a largura da grade */
+            text-align: center;
+            padding: 40px;
+        }
         
-        /* Estilos diversos (link container e responsividade) */
         .link-container {
-            background-color: var(--cor-secundaria);
-            padding: 10px 20px;       
-            border-radius: 6px;       
-            display: inline-block;    
-            margin: 20px 40px;           
+            display: none; /* Ocultar o link para o manual neste layout principal */
         }
 
-        .link-container a {
-            color: white;             
-            text-decoration: none;    
-            font-weight: bold;        
-        }
-
-        .link-container:hover {
-            background-color: #ff3399; 
-            cursor: pointer;
-        }
-        
+        /* Responsividade */
         @media (max-width: 768px) {
-            header, #busca-api-container, .catalogo-header {
+            header {
                 padding: 10px 20px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .nav-links {
+                margin: 10px 0;
+                order: 3;
+                text-align: center;
+                flex-basis: 100%;
+            }
+            #busca-api-container {
+                padding: 40px 20px;
+            }
+            #input-busca-api {
+                width: 100%;
+            }
+            .filtro-avancado-container {
+                flex-direction: column;
+                gap: 20px;
+                padding: 0 20px;
+            }
+            .filtro-grupo {
+                border-right: none;
+                border-bottom: 1px solid var(--cor-borda);
+                padding-bottom: 10px;
             }
             #lista-filmes {
-                margin: 10px 20px;
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                gap: 15px;
+                margin: 20px;
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             }
             .filme-imagem {
-                height: 220px;
-            }
-            .catalogo-header {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            #busca-filme {
-                width: 100%;
+                height: 200px;
             }
         }
     </style>
 </head>
 <body>
     <header>
-        <div class="logo">► FILMFLIX</div>
+        <div class="logo">VITRINE<span style="color: var(--cor-secundaria);">FILMES</span></div>
         <nav class="nav-links">
-            <a href="#">Minha Lista</a>
-            <a href="#">Gêneros</a>
             <a href="#">Sobre</a>
+            <a href="#">Filmes</a>
+            <a href="#">Assista em Casa</a>
+            <a href="#">Sessão Vitrine</a>
+            <a href="#">VitrineLab</a>
+            <a href="#">Loja</a>
         </nav>
+        <div class="search-icon">
+            <input type="text" placeholder="Buscar..." style="padding: 5px; border-radius: 4px; background-color: var(--cor-input-bg); border: 1px solid var(--cor-borda); color: white;">
+        </div>
     </header>
     
     <div id="busca-api-container">
-        <h2>Pesquisar Filmes</h2>
-        <input type="text" id="input-busca-api" placeholder="Digite o título do filme a pesquisar (Ex: The Matrix)">
+        <h2 class="main-title">EXPLORE NOSSO CATÁLOGO DE FILMES</h2>
+        <input type="text" id="input-busca-api" placeholder="Digite o título do filme (Ex: barbie, The Matrix)" value="" autofocus>
         <button id="btn-buscar-api">Pesquisar</button>
         <p id="resultado-api"></p>
+
+        <div class="filtro-avancado-container">
+            <div class="filtro-grupo">
+                <label>Filtrar por gênero</label>
+                <select class="filtro-dropdown">
+                    <option>Qualquer Gênero</option>
+                    <option>Ação</option>
+                    <option>Comédia</option>
+                    <option>Drama</option>
+                </select>
+            </div>
+            
+            <div class="filtro-grupo">
+                <label>Filtrar por ano</label>
+                <select class="filtro-dropdown">
+                    <option>Qualquer Ano</option>
+                    <option>2020 - 2025</option>
+                    <option>2010 - 2019</option>
+                </select>
+            </div>
+
+            <div class="filtro-grupo">
+                <label>Opções</label>
+                <label><input type="checkbox"> Assista em casa</label>
+                <label><input type="checkbox"> Assista nos Cinemas</label>
+            </div>
+            
+            <div class="filtro-grupo" style="border-right: none;">
+                <label>Programas</label>
+                <label><input type="checkbox"> Manequim Filmes</label>
+                <label><input type="checkbox"> Sessão Vitrine</label>
+            </div>
+        </div>
     </div>
     
-    <hr> 
+    <hr style="margin-top: 0; opacity: 0.5;"> 
     
-    <div class="catalogo-header">
-        <input type="text" id="busca-filme" placeholder="Filtre os filmes por título (na lista atual)...">
-        <select class="filtro-dropdown">
-            <option>Gênero</option>
-        </select>
-        <select class="filtro-dropdown">
-            <option>Ordenar</option>
-        </select>
-    </div>
-    
+    <input type="text" id="busca-filme" placeholder="Filtre os filmes por título (na lista atual)...">
     <div id="lista-filmes">
-        <p id="mensagem-vazia" style="display: none;"></p>
+        <p id="mensagem-vazia" style="display: block;">Digite um termo de busca acima para ver os filmes.</p>
     </div>
     
     <div class="link-container">
@@ -302,21 +345,7 @@
     <script>
 
     const OMDb_API_KEY = '4c42996f'; 
-    const catalogo = []; // Mantido o catálogo original (para a renderização inicial)
-
-    // Adiciona um filme de exemplo para iniciar
-    catalogo.push({
-        titulo: "Um Mistério de Cores",
-        imagemURL: "https://i.imgur.com/gK9u5lA.png", 
-        sinopse: "Um detetive obcecado por cores deve desvendar a verdade por trás de um crime em que a única pista é uma mancha de cor primária em uma tela vazia.",
-        diretor: "Ava Violeta",
-        duracao: 118, 
-        faixaEtaria: "14 anos",
-        ano: 2024, 
-        genero: "Suspense",
-        nota: 8.5,
-        trailerURL: 'https://www.youtube.com/results?search_query=Um+Misterio+de+Cores+trailer',
-    });
+    const catalogo = []; 
 
     // CAPTURA DE ELEMENTOS DO DOM
     const listaFilmesContainer = document.getElementById('lista-filmes');
@@ -327,57 +356,20 @@
     const resultadoApi = document.getElementById('resultado-api');
 
     // ====================================
-    // II. FUNÇÕES AUXILIARES
+    // I. FUNÇÕES AUXILIARES DE RENDERIZAÇÃO
     // ====================================
-    
-    function gerarEstrelas(nota) {
-        // (Mantida função original, mas as estrelas não serão exibidas na grade atual)
-        const notaArredondada = Math.round(nota * 2) / 2;
-        let estrelasHtml = '';
-        for (let i = 1; i <= 5; i++) {
-            if (i <= notaArredondada) {
-                estrelasHtml += '<span class="estrela cheia">★</span>';
-            } else if (i - 0.5 === notaArredondada) {
-                estrelasHtml += '<span class="estrela metade">★</span>';
-            } else {
-                estrelasHtml += '<span class="estrela vazia">★</span>';
-            }
-        }
-        estrelasHtml += `<span class="nota-valor"> (${nota.toFixed(1)}/10)</span>`;
-        return estrelasHtml;
-    }
-
-    function formatarDuracao(minutos) {
-        const horas = Math.floor(minutos / 60);
-        const mins = minutos % 60;
-        return `${horas > 0 ? horas + 'h ' : ''}${mins > 0 ? mins + 'min' : (horas === 0 ? '0min' : '')}`.trim();
-    }
-
-    function removerFilme(tituloRemover) {
-        const index = catalogo.findIndex(filme => filme.titulo === tituloRemover);
-        if (index !== -1) {
-            catalogo.splice(index, 1);
-            renderizarCatalogo();
-        }
-    }
     
     /**
      * FUNÇÃO DE RENDERIZAÇÃO (Desenha os filmes na grade)
-     * Pode receber um array (para busca API) ou usar o catálogo global.
      */
-    function renderizarCatalogo(listaFilmes = catalogo) {
+    function renderizarCatalogo(listaFilmes = []) {
         listaFilmesContainer.innerHTML = '';
         
-        const termoBusca = inputBuscaLocal.value.toLowerCase().trim();
-        const filmesFiltrados = listaFilmes.filter(filme => 
-            filme.titulo.toLowerCase().includes(termoBusca)
-        );
+        // No modo busca, não usamos filtro local, apenas a lista fornecida
+        const filmesFiltrados = listaFilmes;
         
         if (filmesFiltrados.length === 0) {
-            mensagemVazia.textContent = termoBusca ? 
-                `Nenhum filme encontrado com o título "${termoBusca}" na lista atual.` : 
-                "Nenhum filme cadastrado ainda. Use a barra de pesquisa acima.";
-                
+            mensagemVazia.textContent = "Nenhum filme encontrado para esta busca.";
             listaFilmesContainer.appendChild(mensagemVazia);
             mensagemVazia.style.display = 'block';
             return;
@@ -389,8 +381,8 @@
             const filmeCard = document.createElement('div');
             filmeCard.classList.add('filme-card');
             
-            // Exibe a nota ou "..." se não for um valor numérico válido (enquanto carrega)
-            const notaTexto = (typeof filme.nota === 'number' && !isNaN(filme.nota)) ? filme.nota.toFixed(1) : '...';
+            // Exibe a nota ou "..." se a nota ainda estiver carregando
+            const notaTexto = (typeof filme.nota === 'number' && !isNaN(filme.nota) && filme.nota > 0) ? filme.nota.toFixed(1) : '...';
             const notaSobreposta = `<div class="nota-sobreposta">${notaTexto}</div>`;
             
             // Trata URL de imagem não válida (N/A)
@@ -403,23 +395,15 @@
                 <img src="${posterURL}" alt="Poster do filme ${filme.titulo}" class="filme-imagem">
                 <div class="filme-info">
                     <h3>${filme.titulo} (${filme.ano || 'N/A'})</h3>
-                    </div>
+                </div>
             `;
             
-            // Adicionar clique para remover APENAS se for um item do catálogo LOCAL
-            if (listaFilmes === catalogo) {
-                filmeCard.addEventListener('click', () => {
-                     // Lógica opcional para remover do catálogo local, mantida oculta por padrão
-                     // removerFilme(filme.titulo); 
-                });
-            }
-
             listaFilmesContainer.appendChild(filmeCard);
         });
     }
 
     // ====================================
-    // III. FUNÇÕES DE BUSCA API OMDb (COM BUSCA DETALHADA)
+    // II. FUNÇÕES DE BUSCA API OMDb (COM BUSCA DETALHADA)
     // ====================================
     
     /**
@@ -438,12 +422,7 @@
         return {
             titulo: dados.Title,
             imagemURL: dados.Poster, 
-            sinopse: dados.Plot,
-            diretor: dados.Director,
-            duracao: dados.Runtime.match(/\d+/) ? parseInt(dados.Runtime.match(/\d+/)[0]) : 0, 
-            faixaEtaria: dados.Rated, 
             ano: parseInt(dados.Year), 
-            genero: dados.Genre.split(', ')[0] || 'Outro', 
             nota: notaOmdb,
             imdbID: imdbID
         };
@@ -463,7 +442,8 @@
 
         resultadoApi.textContent = `Buscando por "${tituloBusca}"...`;
         btnBuscarApi.disabled = true;
-        listaFilmesContainer.innerHTML = ''; // Limpa a lista antes da busca
+        inputBuscaApi.disabled = true;
+        listaFilmesContainer.innerHTML = ''; 
 
         try {
             // PASSO 1: Busca principal (por nome, usando ?s=)
@@ -475,19 +455,19 @@
                 
                 const filmesEncontrados = dadosBusca.Search;
                 
-                // PASSO 2: Cria um array de Promises para buscar os detalhes de CADA filme
-                const promisesDetalhes = filmesEncontrados.map(filme => getFilmeDetalhes(filme.imdbID));
-                
-                // Exibe os cartões imediatamente com a nota '...'
+                // Exibe os cartões imediatamente com a nota '...' para feedback rápido
                 const listaCarregando = filmesEncontrados.map(filme => ({
                     titulo: filme.Title,
                     imagemURL: filme.Poster,
                     ano: filme.Year,
-                    nota: null // Indica que a nota está pendente
+                    nota: null // Nota pendente
                 }));
                 renderizarCatalogo(listaCarregando);
                 
                 resultadoApi.textContent = `Encontrados ${filmesEncontrados.length} resultados. Carregando notas...`;
+                
+                // PASSO 2: Cria Promises para buscar os detalhes
+                const promisesDetalhes = filmesEncontrados.map(filme => getFilmeDetalhes(filme.imdbID));
                 
                 // PASSO 3: Executa todas as buscas detalhadas
                 const filmesComDetalhes = await Promise.all(promisesDetalhes);
@@ -495,10 +475,10 @@
                 // PASSO 4: Renderiza com os dados completos
                 renderizarCatalogo(filmesComDetalhes);
 
-                resultadoApi.textContent = `✅ Exibindo ${filmesComDetalhes.length} resultados completos para "${tituloBusca}".`;
+                resultadoApi.textContent = `✅ Exibindo ${filmesComDetalhes.length} resultados para "${tituloBusca}".`;
 
             } else {
-                renderizarCatalogo([]); // Renderiza a lista vazia
+                renderizarCatalogo([]); 
                 resultadoApi.textContent = `❌ Nenhum filme encontrado para "${tituloBusca}".`;
             }
         } catch (error) {
@@ -507,23 +487,16 @@
             renderizarCatalogo([]);
         } finally {
             btnBuscarApi.disabled = false;
+            inputBuscaApi.disabled = false;
         }
     }
     
     
     // ====================================
-    // V. EVENT LISTENERS
+    // III. EVENT LISTENERS
     // ====================================
     
-    // 1. Busca Local (Filtro) - Agora só funciona para filtrar a lista ATUAL
-    inputBuscaLocal.addEventListener('input', () => {
-        // Redefine a renderização usando a lista atual no DOM.
-        // É um uso limitado, mas mantém a funcionalidade de filtro.
-        renderizarCatalogo(catalogo); 
-    }); 
-
-    // 2. Busca API (Botão e Enter)
-    btnBuscarApi.addEventListener('click', buscarFilmeOMDb);
+    // Event listener para o campo de busca (Keypress Enter)
     inputBuscaApi.addEventListener('keypress', (event) => {
         if (event.key === 'Enter') {
             event.preventDefault(); 
@@ -531,11 +504,20 @@
         }
     });
 
-    // ====================================
-    // VI. RENDERIZAÇÃO INICIAL
-    // ====================================
+    // Event listener para o botão de busca (caso ele fosse visível)
+    btnBuscarApi.addEventListener('click', buscarFilmeOMDb);
     
-    renderizarCatalogo();
+    // Opcional: Adicionar evento para simular a busca ao perder o foco (blur)
+    /*
+    inputBuscaApi.addEventListener('blur', () => {
+        if (inputBuscaApi.value.trim().length > 2) {
+            buscarFilmeOMDb();
+        }
+    });
+    */
+
+    // NENHUMA RENDERIZAÇÃO INICIAL (começa vazio, esperando a busca)
+    
 </script>
 
 </body>
