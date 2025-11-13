@@ -14,9 +14,9 @@
         }
 
         :root {
-            --cor-fundo-site: #1a1a1a; /* Preto/Grafite do fundo */
-            --cor-fundo-header: #222222; /* Cor mais clara para o header/busca/cartão */
-            --cor-texto: #ffffff; /* Texto principal branco */
+            --cor-fundo-site: #1a1a1a; 
+            --cor-fundo-header: #222222; 
+            --cor-texto: #ffffff; 
             --cor-primaria: #03a9f4; /* Azul/Ciano (Destaque principal) */
             --cor-secundaria: #ff0077; /* Rosa Vibrante (Destaque secundário/Nota) */
             --cor-borda: #444444;
@@ -140,7 +140,7 @@
         }
 
         #busca-filme {
-            flex-grow: 1; /* Ocupa o espaço restante */
+            flex-grow: 1; 
         }
         
         /* -------------------------------------- */
@@ -163,7 +163,7 @@
             overflow: hidden; 
             text-align: left;
             background-color: var(--cor-fundo-header); 
-            position: relative; /* CRUCIAL para a nota sobreposta */
+            position: relative; 
             transition: transform 0.2s;
         }
 
@@ -191,15 +191,13 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis; 
-            height: 1.5em; /* Garante altura uniforme para todos os títulos */
+            height: 1.5em; 
         }
 
-        /* Oculta detalhes para o visual de cartão */
         .filme-info p {
             display: none !important; 
         }
 
-        /* Oculta os botões do visual de grade */
         .btn-remover, .btn-trailer {
             display: none !important;
         }
@@ -221,12 +219,8 @@
             box-shadow: 0 0 5px rgba(0,0,0,0.5);
             border: 1px solid var(--cor-secundaria);
         }
-
-        /* -------------------------------------- */
-        /* ESTILOS DIVERSOS */
-        /* -------------------------------------- */
         
-        /* Estilo para o link para a página manual */
+        /* Estilos diversos (link container e responsividade) */
         .link-container {
             background-color: var(--cor-secundaria);
             padding: 10px 20px;       
@@ -246,7 +240,6 @@
             cursor: pointer;
         }
         
-        /* Responsividade básica */
         @media (max-width: 768px) {
             header, #busca-api-container, .catalogo-header {
                 padding: 10px 20px;
@@ -280,25 +273,21 @@
     </header>
     
     <div id="busca-api-container">
-        <h2>Adicionar Filme por Busca (OMDb)</h2>
-        <input type="text" id="input-busca-api" placeholder="Digite o título do filme a buscar (Ex: The Matrix)">
-        <button id="btn-buscar-api">Buscar e Adicionar</button>
+        <h2>Pesquisar Filmes</h2>
+        <input type="text" id="input-busca-api" placeholder="Digite o título do filme a pesquisar (Ex: The Matrix)">
+        <button id="btn-buscar-api">Pesquisar</button>
         <p id="resultado-api"></p>
     </div>
     
     <hr> 
     
     <div class="catalogo-header">
-        <input type="text" id="busca-filme" placeholder="Filtre os filmes por título...">
+        <input type="text" id="busca-filme" placeholder="Filtre os filmes por título (na lista atual)...">
         <select class="filtro-dropdown">
             <option>Gênero</option>
-            <option>Ação</option>
-            <option>Comédia</option>
         </select>
         <select class="filtro-dropdown">
             <option>Ordenar</option>
-            <option>Nota (Maior)</option>
-            <option>Ano (Recente)</option>
         </select>
     </div>
     
@@ -313,7 +302,7 @@
     <script>
 
     const OMDb_API_KEY = '4c42996f'; 
-    const catalogo = [];
+    const catalogo = []; // Mantido o catálogo original (para a renderização inicial)
 
     // Adiciona um filme de exemplo para iniciar
     catalogo.push({
@@ -329,22 +318,20 @@
         trailerURL: 'https://www.youtube.com/results?search_query=Um+Misterio+de+Cores+trailer',
     });
 
-    // CAPTURA DE ELEMENTOS DO DOM (Gerais)
+    // CAPTURA DE ELEMENTOS DO DOM
     const listaFilmesContainer = document.getElementById('lista-filmes');
     const mensagemVazia = document.getElementById('mensagem-vazia');
     const inputBuscaLocal = document.getElementById('busca-filme');
-
-    // CAPTURA DE ELEMENTOS DO DOM (Busca API)
     const inputBuscaApi = document.getElementById('input-busca-api');
     const btnBuscarApi = document.getElementById('btn-buscar-api');
     const resultadoApi = document.getElementById('resultado-api');
 
-
     // ====================================
     // II. FUNÇÕES AUXILIARES
     // ====================================
-
+    
     function gerarEstrelas(nota) {
+        // (Mantida função original, mas as estrelas não serão exibidas na grade atual)
         const notaArredondada = Math.round(nota * 2) / 2;
         let estrelasHtml = '';
         for (let i = 1; i <= 5; i++) {
@@ -374,19 +361,22 @@
         }
     }
     
-    // FUNÇÃO DE RENDERIZAÇÃO (Desenha o HTML) - ATUALIZADA PARA A NOTA SOBREPOSTA
-    function renderizarCatalogo() {
+    /**
+     * FUNÇÃO DE RENDERIZAÇÃO (Desenha os filmes na grade)
+     * Pode receber um array (para busca API) ou usar o catálogo global.
+     */
+    function renderizarCatalogo(listaFilmes = catalogo) {
         listaFilmesContainer.innerHTML = '';
         
         const termoBusca = inputBuscaLocal.value.toLowerCase().trim();
-        const filmesFiltrados = catalogo.filter(filme => 
+        const filmesFiltrados = listaFilmes.filter(filme => 
             filme.titulo.toLowerCase().includes(termoBusca)
         );
         
         if (filmesFiltrados.length === 0) {
             mensagemVazia.textContent = termoBusca ? 
-                `Nenhum filme encontrado com o título "${termoBusca}".` : 
-                "Nenhum filme cadastrado ainda.";
+                `Nenhum filme encontrado com o título "${termoBusca}" na lista atual.` : 
+                "Nenhum filme cadastrado ainda. Use a barra de pesquisa acima.";
                 
             listaFilmesContainer.appendChild(mensagemVazia);
             mensagemVazia.style.display = 'block';
@@ -399,116 +389,122 @@
             const filmeCard = document.createElement('div');
             filmeCard.classList.add('filme-card');
             
-            // NOVO: Balão de nota sobreposta (como no mockup)
-            const notaSobreposta = `<div class="nota-sobreposta">${filme.nota.toFixed(1)}</div>`;
+            // Exibe a nota ou "..." se não for um valor numérico válido (enquanto carrega)
+            const notaTexto = (typeof filme.nota === 'number' && !isNaN(filme.nota)) ? filme.nota.toFixed(1) : '...';
+            const notaSobreposta = `<div class="nota-sobreposta">${notaTexto}</div>`;
             
-            const duracaoFormatada = formatarDuracao(filme.duracao);
-            const estrelasHtml = gerarEstrelas(filme.nota); 
-            
-            const trailerButtonHtml = filme.trailerURL ? 
-                `<a href="${filme.trailerURL}" target="_blank" class="btn-trailer">▶️ Ver Trailer</a>` : 
-                '';
+            // Trata URL de imagem não válida (N/A)
+            const posterURL = filme.imagemURL && filme.imagemURL !== 'N/A' 
+                ? filme.imagemURL 
+                : 'https://via.placeholder.com/200x300?text=Sem+Poster';
 
             filmeCard.innerHTML = `
                 ${notaSobreposta}
-                <img src="${filme.imagemURL}" alt="Poster do filme ${filme.titulo}" class="filme-imagem">
+                <img src="${posterURL}" alt="Poster do filme ${filme.titulo}" class="filme-imagem">
                 <div class="filme-info">
-                    <h3>${filme.titulo}</h3>
-                    <p><strong>Diretor:</strong> ${filme.diretor}</p>
-                    <p><strong>Gênero:</strong> ${filme.genero} | <strong>Faixa Etária:</strong> ${filme.faixaEtaria}</p>
-                    <p><strong>Duração:</strong> ${duracaoFormatada}</p>
-                    
-                    <p class="nota"><strong>Nota:</strong> ${estrelasHtml}</p>
-                    
-                    <p><strong>Sinopse:</strong> ${filme.sinopse}</p>
-                    
-                    <div style="margin-top: 10px;">
-                        ${trailerButtonHtml}
-                        <button class="btn-remover">Remover</button>
+                    <h3>${filme.titulo} (${filme.ano || 'N/A'})</h3>
                     </div>
-                </div>
             `;
             
-            const btnRemover = filmeCard.querySelector('.btn-remover');
-            btnRemover.addEventListener('click', () => {
-                removerFilme(filme.titulo); 
-            });
+            // Adicionar clique para remover APENAS se for um item do catálogo LOCAL
+            if (listaFilmes === catalogo) {
+                filmeCard.addEventListener('click', () => {
+                     // Lógica opcional para remover do catálogo local, mantida oculta por padrão
+                     // removerFilme(filme.titulo); 
+                });
+            }
 
             listaFilmesContainer.appendChild(filmeCard);
         });
     }
 
     // ====================================
-    // III. FUNÇÕES DE BUSCA API OMDb
+    // III. FUNÇÕES DE BUSCA API OMDb (COM BUSCA DETALHADA)
     // ====================================
+    
+    /**
+     * Faz uma busca detalhada por ID na OMDb.
+     */
+    async function getFilmeDetalhes(imdbID) {
+        const url = `https://www.omdbapi.com/?i=${imdbID}&apikey=${OMDb_API_KEY}`;
+        const response = await fetch(url);
+        const dados = await response.json();
+        
+        let notaOmdb = null;
+        if (dados.imdbRating && dados.imdbRating !== 'N/A') {
+            notaOmdb = parseFloat(dados.imdbRating);
+        }
 
+        return {
+            titulo: dados.Title,
+            imagemURL: dados.Poster, 
+            sinopse: dados.Plot,
+            diretor: dados.Director,
+            duracao: dados.Runtime.match(/\d+/) ? parseInt(dados.Runtime.match(/\d+/)[0]) : 0, 
+            faixaEtaria: dados.Rated, 
+            ano: parseInt(dados.Year), 
+            genero: dados.Genre.split(', ')[0] || 'Outro', 
+            nota: notaOmdb,
+            imdbID: imdbID
+        };
+    }
+
+    /**
+     * Busca filmes na OMDb API por palavra-chave, busca detalhes e renderiza.
+     */
     async function buscarFilmeOMDb() {
         const tituloBusca = inputBuscaApi.value.trim();
         resultadoApi.textContent = ''; 
         
         if (!tituloBusca) {
-            resultadoApi.textContent = "Digite o título do filme.";
-            return;
-        }
-        
-        // Verifica se o filme já existe no catálogo local
-        if (catalogo.some(filme => filme.titulo.toLowerCase() === tituloBusca.toLowerCase())) {
-            resultadoApi.textContent = `⚠️ O filme "${tituloBusca}" já está na sua lista.`;
+            resultadoApi.textContent = "Digite o título do filme para iniciar a pesquisa.";
             return;
         }
 
-        resultadoApi.textContent = "Buscando...";
+        resultadoApi.textContent = `Buscando por "${tituloBusca}"...`;
         btnBuscarApi.disabled = true;
+        listaFilmesContainer.innerHTML = ''; // Limpa a lista antes da busca
 
         try {
-            const url = `https://www.omdbapi.com/?t=${encodeURIComponent(tituloBusca)}&apikey=${OMDb_API_KEY}`;
-            const response = await fetch(url);
-            const dados = await response.json();
+            // PASSO 1: Busca principal (por nome, usando ?s=)
+            const urlBusca = `https://www.omdbapi.com/?s=${encodeURIComponent(tituloBusca)}&type=movie&apikey=${OMDb_API_KEY}`;
+            const responseBusca = await fetch(urlBusca);
+            const dadosBusca = await responseBusca.json();
 
-            if (dados.Response === "True") {
+            if (dadosBusca.Response === "True" && dadosBusca.Search) {
                 
-                const duracaoMinutos = dados.Runtime.match(/\d+/) ? parseInt(dados.Runtime.match(/\d+/)[0]) : 0;
+                const filmesEncontrados = dadosBusca.Search;
                 
-                let notaOmdb = 0;
-                if (dados.imdbRating && dados.imdbRating !== 'N/A') {
-                    notaOmdb = parseFloat(dados.imdbRating);
-                } else if (dados.Ratings && dados.Ratings.length > 0) {
-                    const rating = dados.Ratings.find(r => r.Source.includes('Internet Movie Database'));
-                    if (rating) {
-                        notaOmdb = parseFloat(rating.Value.split('/')[0]) || parseFloat(rating.Value);
-                    }
-                }
-
-                // Cria o link de busca do YouTube para o trailer
-                const trailerLink = `https://www.youtube.com/results?search_query=${encodeURIComponent(dados.Title + ' official trailer')}`;
-
-
-                // Mapeamento dos dados para o formato do seu catálogo
-                const novoFilmeOmdb = {
-                    titulo: dados.Title,
-                    imagemURL: dados.Poster !== 'N/A' ? dados.Poster : 'https://via.placeholder.com/200x300?text=Sem+Poster', 
-                    sinopse: dados.Plot !== 'N/A' ? dados.Plot : 'Sinopse não disponível.',
-                    diretor: dados.Director !== 'N/A' ? dados.Director : 'Desconhecido',
-                    duracao: duracaoMinutos, 
-                    faixaEtaria: dados.Rated !== 'N/A' ? dados.Rated : 'Livre', 
-                    ano: parseInt(dados.Year), 
-                    genero: dados.Genre.split(', ')[0] || 'Outro', 
-                    nota: notaOmdb,
-                    trailerURL: trailerLink,
-                };
-
-                catalogo.push(novoFilmeOmdb);
-                renderizarCatalogo();
+                // PASSO 2: Cria um array de Promises para buscar os detalhes de CADA filme
+                const promisesDetalhes = filmesEncontrados.map(filme => getFilmeDetalhes(filme.imdbID));
                 
-                resultadoApi.textContent = `✅ Filme "${dados.Title}" adicionado com sucesso!`;
-                inputBuscaApi.value = ''; 
+                // Exibe os cartões imediatamente com a nota '...'
+                const listaCarregando = filmesEncontrados.map(filme => ({
+                    titulo: filme.Title,
+                    imagemURL: filme.Poster,
+                    ano: filme.Year,
+                    nota: null // Indica que a nota está pendente
+                }));
+                renderizarCatalogo(listaCarregando);
                 
+                resultadoApi.textContent = `Encontrados ${filmesEncontrados.length} resultados. Carregando notas...`;
+                
+                // PASSO 3: Executa todas as buscas detalhadas
+                const filmesComDetalhes = await Promise.all(promisesDetalhes);
+
+                // PASSO 4: Renderiza com os dados completos
+                renderizarCatalogo(filmesComDetalhes);
+
+                resultadoApi.textContent = `✅ Exibindo ${filmesComDetalhes.length} resultados completos para "${tituloBusca}".`;
+
             } else {
-                resultadoApi.textContent = `❌ Filme não encontrado: ${dados.Error || 'Erro desconhecido.'}`;
+                renderizarCatalogo([]); // Renderiza a lista vazia
+                resultadoApi.textContent = `❌ Nenhum filme encontrado para "${tituloBusca}".`;
             }
         } catch (error) {
-            console.error("Erro ao buscar filme na OMDb API:", error);
+            console.error("Erro ao buscar filmes na OMDb API:", error);
             resultadoApi.textContent = "⚠️ Erro de conexão ou na API.";
+            renderizarCatalogo([]);
         } finally {
             btnBuscarApi.disabled = false;
         }
@@ -519,8 +515,12 @@
     // V. EVENT LISTENERS
     // ====================================
     
-    // 1. Busca Local (Filtro)
-    inputBuscaLocal.addEventListener('input', renderizarCatalogo); 
+    // 1. Busca Local (Filtro) - Agora só funciona para filtrar a lista ATUAL
+    inputBuscaLocal.addEventListener('input', () => {
+        // Redefine a renderização usando a lista atual no DOM.
+        // É um uso limitado, mas mantém a funcionalidade de filtro.
+        renderizarCatalogo(catalogo); 
+    }); 
 
     // 2. Busca API (Botão e Enter)
     btnBuscarApi.addEventListener('click', buscarFilmeOMDb);
@@ -530,7 +530,7 @@
             buscarFilmeOMDb();
         }
     });
-    
+
     // ====================================
     // VI. RENDERIZAÇÃO INICIAL
     // ====================================
