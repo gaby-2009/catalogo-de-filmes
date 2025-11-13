@@ -3,102 +3,313 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Catálogo de Filmes - Busca por API</title>
+    <title>Catálogo de Filmes - FILMFLIX</title>
     
-    <link rel="stylesheet" href="style.css"> 
     <style>
-        /* Estilos existentes e adicionais para melhor visualização */
-        #busca-filme {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 20px;
+        /* CSS GLOBAL E VARIÁVEIS PARA TEMA ESCURO */
+        *,
+        *::before,
+        *::after {
             box-sizing: border-box;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-        .filme-card {
-            display: flex;
-            margin-bottom: 20px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-        }
-        .filme-imagem {
-            width: 100px; 
-            height: 150px;
-            object-fit: cover;
-            margin-right: 15px;
-            border-radius: 4px;
-        }
-        .filme-info {
-            flex-grow: 1;
-        }
-        .nota {
-            margin: 5px 0;
-        }
-        .estrela {
-            font-size: 1.2em;
-            color: gray;
-        }
-        .cheia {
-            color: gold;
-        }
-        .metade {
-            color: orange; 
-        }
-        .vazia {
-            color: #ddd;
         }
 
-        /* NOVOS ESTILOS PARA A BUSCA API */
-        #busca-api-container {
+        :root {
+            --cor-fundo-site: #1a1a1a; /* Preto/Grafite do fundo */
+            --cor-fundo-header: #222222; /* Cor mais clara para o header/busca/cartão */
+            --cor-texto: #ffffff; /* Texto principal branco */
+            --cor-primaria: #03a9f4; /* Azul/Ciano (Destaque principal) */
+            --cor-secundaria: #ff0077; /* Rosa Vibrante (Destaque secundário/Nota) */
+            --cor-borda: #444444;
+            --cor-input-bg: #333;
+            
+            --cor-erro: #e74c3c; 
+            --cor-erro-hover: #c0392b;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0; 
+            background-color: var(--cor-fundo-site);
+            color: var(--cor-texto);
+        }
+        
+        /* ------------------------------------
+        * Estilos do HEADER (Simulação da barra FILMFLIX)
+        * ------------------------------------
+        */
+        header {
+            background-color: var(--cor-fundo-header);
+            padding: 10px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
             margin-bottom: 20px;
-            padding: 15px;
-            border: 1px solid #cce5ff;
-            background-color: #e6f2ff;
-            border-radius: 6px;
         }
-        #busca-api-container input[type="text"] {
-            width: 70%;
-            padding: 8px;
-            margin-right: 10px;
-            border: 1px solid #c299ff;
-            border-radius: 4px;
+
+        .logo {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--cor-primaria);
+            letter-spacing: -1px;
         }
+
+        .nav-links a {
+            color: var(--cor-texto);
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 1.1em;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--cor-secundaria);
+        }
+
+        h2 {
+            color: var(--cor-primaria);
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-top: 0;
+            font-size: 1.5em;
+        }
+
+        hr {
+            border: 0;
+            border-top: 1px solid var(--cor-borda);
+            margin: 0 40px 20px 40px;
+        }
+
+        /* -------------------------------------- */
+        /* ESTILOS DA BUSCA API E BUSCA LOCAL/FILTROS */
+        /* -------------------------------------- */
+
+        #busca-api-container {
+            background-color: var(--cor-fundo-header);
+            padding: 20px 40px;
+        }
+
+        #busca-api-container input[type="text"],
         #busca-api-container button {
-            padding: 8px 15px;
-            background-color: #9000ff;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 16px;
+        }
+
+        #input-busca-api {
+            width: 70%;
+            margin-right: 10px;
+            border: 1px solid var(--cor-borda);
+            background-color: var(--cor-input-bg);
+            color: var(--cor-texto);
+        }
+        
+        #btn-buscar-api {
+            background-color: var(--cor-secundaria); /* Rosa Vibrante */
             color: white;
             border: none;
-            border-radius: 4px;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
+        #btn-buscar-api:hover {
+            background-color: #ff3399;
+        }
+        
         #resultado-api {
             margin-top: 10px;
             font-weight: bold;
-            color: #690e84;
+            color: var(--cor-primaria);
+        }
+
+        .catalogo-header {
+            display: flex;
+            gap: 15px;
+            padding: 20px 40px;
+            background-color: var(--cor-fundo-header);
+            align-items: center;
+        }
+
+        #busca-filme,
+        .filtro-dropdown {
+            padding: 10px 15px;
+            border: 1px solid var(--cor-borda);
+            border-radius: 6px;
+            font-size: 16px;
+            background-color: var(--cor-input-bg);
+            color: white;
+        }
+
+        #busca-filme {
+            flex-grow: 1; /* Ocupa o espaço restante */
+        }
+        
+        /* -------------------------------------- */
+        /* ESTILOS DA LISTA DE FILMES (GRADE/GRID) */
+        /* -------------------------------------- */
+        #lista-filmes {
+            margin: 20px 40px; 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+            gap: 20px; 
+            padding: 0;
+        }
+
+        .filme-card {
+            display: block; 
+            padding: 0; 
+            border: none; 
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3); 
+            overflow: hidden; 
+            text-align: left;
+            background-color: var(--cor-fundo-header); 
+            position: relative; /* CRUCIAL para a nota sobreposta */
+            transition: transform 0.2s;
+        }
+
+        .filme-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.5);
+        }
+
+        .filme-imagem {
+            width: 100%; 
+            height: 300px; 
+            object-fit: cover;
+            margin-right: 0;
+            border-radius: 0;
+        }
+
+        .filme-info {
+            padding: 10px 10px 15px 10px;
+        }
+
+        .filme-card h3 {
+            margin: 5px 0;
+            font-size: 1.1em;
+            color: var(--cor-texto); 
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; 
+            height: 1.5em; /* Garante altura uniforme para todos os títulos */
+        }
+
+        /* Oculta detalhes para o visual de cartão */
+        .filme-info p {
+            display: none !important; 
+        }
+
+        /* Oculta os botões do visual de grade */
+        .btn-remover, .btn-trailer {
+            display: none !important;
+        }
+        
+        /* -------------------------------------- */
+        /* NOTA SOBREPOSTA (Como no mockup 6.8) */
+        /* -------------------------------------- */
+        .nota-sobreposta {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: var(--cor-fundo-header);
+            color: var(--cor-secundaria); 
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            font-size: 1.1em;
+            z-index: 10;
+            box-shadow: 0 0 5px rgba(0,0,0,0.5);
+            border: 1px solid var(--cor-secundaria);
+        }
+
+        /* -------------------------------------- */
+        /* ESTILOS DIVERSOS */
+        /* -------------------------------------- */
+        
+        /* Estilo para o link para a página manual */
+        .link-container {
+            background-color: var(--cor-secundaria);
+            padding: 10px 20px;       
+            border-radius: 6px;       
+            display: inline-block;    
+            margin: 20px 40px;           
+        }
+
+        .link-container a {
+            color: white;             
+            text-decoration: none;    
+            font-weight: bold;        
+        }
+
+        .link-container:hover {
+            background-color: #ff3399; 
+            cursor: pointer;
+        }
+        
+        /* Responsividade básica */
+        @media (max-width: 768px) {
+            header, #busca-api-container, .catalogo-header {
+                padding: 10px 20px;
+            }
+            #lista-filmes {
+                margin: 10px 20px;
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+            }
+            .filme-imagem {
+                height: 220px;
+            }
+            .catalogo-header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            #busca-filme {
+                width: 100%;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>𝒞𝒶𝓉𝒶́𝓁ℴℊℴ 𝒹ℯ ℱ𝒾𝓁𝓂ℯ𝓈</h1>
+    <header>
+        <div class="logo">► FILMFLIX</div>
+        <nav class="nav-links">
+            <a href="#">Minha Lista</a>
+            <a href="#">Gêneros</a>
+            <a href="#">Sobre</a>
+        </nav>
+    </header>
     
     <div id="busca-api-container">
-        <h2>Adicionar Filme por Busca</h2>
+        <h2>Adicionar Filme por Busca (OMDb)</h2>
         <input type="text" id="input-busca-api" placeholder="Digite o título do filme a buscar (Ex: The Matrix)">
         <button id="btn-buscar-api">Buscar e Adicionar</button>
         <p id="resultado-api"></p>
     </div>
     
-    <hr> <h2>ℳ𝒾𝓃𝒽𝒶 𝓁𝒾𝓈𝓉𝒶 𝒹ℯ 𝒻𝒾𝓁𝓂ℯ𝓈</h2>
-    <input type="text" id="busca-filme" placeholder="Filtre os filmes por título...">
+    <hr> 
+    
+    <div class="catalogo-header">
+        <input type="text" id="busca-filme" placeholder="Filtre os filmes por título...">
+        <select class="filtro-dropdown">
+            <option>Gênero</option>
+            <option>Ação</option>
+            <option>Comédia</option>
+        </select>
+        <select class="filtro-dropdown">
+            <option>Ordenar</option>
+            <option>Nota (Maior)</option>
+            <option>Ano (Recente)</option>
+        </select>
+    </div>
+    
     <div id="lista-filmes">
         <p id="mensagem-vazia" style="display: none;"></p>
     </div>
-    <hr>
     
+    <div class="link-container">
+        <a href="manual.html">Ir para Cadastro Manual</a>
+    </div>
+
     <script>
 
     const OMDb_API_KEY = '4c42996f'; 
@@ -115,7 +326,6 @@
         ano: 2024, 
         genero: "Suspense",
         nota: 8.5,
-        // NOVO CAMPO ADICIONADO para o trailer do filme de exemplo
         trailerURL: 'https://www.youtube.com/results?search_query=Um+Misterio+de+Cores+trailer',
     });
 
@@ -164,7 +374,7 @@
         }
     }
     
-    // FUNÇÃO DE RENDERIZAÇÃO (Desenha o HTML)
+    // FUNÇÃO DE RENDERIZAÇÃO (Desenha o HTML) - ATUALIZADA PARA A NOTA SOBREPOSTA
     function renderizarCatalogo() {
         listaFilmesContainer.innerHTML = '';
         
@@ -189,18 +399,21 @@
             const filmeCard = document.createElement('div');
             filmeCard.classList.add('filme-card');
             
+            // NOVO: Balão de nota sobreposta (como no mockup)
+            const notaSobreposta = `<div class="nota-sobreposta">${filme.nota.toFixed(1)}</div>`;
+            
             const duracaoFormatada = formatarDuracao(filme.duracao);
             const estrelasHtml = gerarEstrelas(filme.nota); 
             
-            // Adicionado o botão/link do trailer
             const trailerButtonHtml = filme.trailerURL ? 
                 `<a href="${filme.trailerURL}" target="_blank" class="btn-trailer">▶️ Ver Trailer</a>` : 
                 '';
 
             filmeCard.innerHTML = `
+                ${notaSobreposta}
                 <img src="${filme.imagemURL}" alt="Poster do filme ${filme.titulo}" class="filme-imagem">
                 <div class="filme-info">
-                    <h3>${filme.titulo} (${filme.ano})</h3>
+                    <h3>${filme.titulo}</h3>
                     <p><strong>Diretor:</strong> ${filme.diretor}</p>
                     <p><strong>Gênero:</strong> ${filme.genero} | <strong>Faixa Etária:</strong> ${filme.faixaEtaria}</p>
                     <p><strong>Duração:</strong> ${duracaoFormatada}</p>
@@ -262,7 +475,6 @@
                 } else if (dados.Ratings && dados.Ratings.length > 0) {
                     const rating = dados.Ratings.find(r => r.Source.includes('Internet Movie Database'));
                     if (rating) {
-                            // Tenta parsear a nota (geralmente X/10 ou X.X)
                         notaOmdb = parseFloat(rating.Value.split('/')[0]) || parseFloat(rating.Value);
                     }
                 }
@@ -274,16 +486,14 @@
                 // Mapeamento dos dados para o formato do seu catálogo
                 const novoFilmeOmdb = {
                     titulo: dados.Title,
-                    imagemURL: dados.Poster !== 'N/A' ? dados.Poster : 'https://via.placeholder.com/100x150?text=Sem+Poster', 
+                    imagemURL: dados.Poster !== 'N/A' ? dados.Poster : 'https://via.placeholder.com/200x300?text=Sem+Poster', 
                     sinopse: dados.Plot !== 'N/A' ? dados.Plot : 'Sinopse não disponível.',
                     diretor: dados.Director !== 'N/A' ? dados.Director : 'Desconhecido',
                     duracao: duracaoMinutos, 
-                    // Mapeia faixa etária do OMDb (ex: "PG-13", "R") para algo mais legível ou mantém
                     faixaEtaria: dados.Rated !== 'N/A' ? dados.Rated : 'Livre', 
                     ano: parseInt(dados.Year), 
                     genero: dados.Genre.split(', ')[0] || 'Outro', 
                     nota: notaOmdb,
-                    // NOVO CAMPO: Adiciona o link do trailer
                     trailerURL: trailerLink,
                 };
 
@@ -320,9 +530,6 @@
             buscarFilmeOMDb();
         }
     });
-
-    // Removido listener do formManual (não existe no HTML fornecido)
-    // formManual.addEventListener('submit', handleCadastroManual);
     
     // ====================================
     // VI. RENDERIZAÇÃO INICIAL
@@ -330,10 +537,6 @@
     
     renderizarCatalogo();
 </script>
-
-    <div class="link-container">
-    <a href="manual.html">Ir para a Próxima Página</a>
-</div>
 
 </body>
 </html>
